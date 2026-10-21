@@ -202,7 +202,16 @@ function menang() {
 
 function bukaPeti() {
   if (skor >= 10) {
-    document.getElementById("pesan").style.display = "flex";
+    const peti = document.getElementById("chest");
+    const pesan = document.getElementById("pesan");
+
+    peti.textContent = "🎁";
+    peti.disabled = true;
+    peti.style.transform = "scale(1.2)";
+
+    setTimeout(function() {
+      pesan.style.display = "flex";
+    }, 500);
   }
 }
 </script>
