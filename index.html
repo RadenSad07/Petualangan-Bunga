@@ -1,0 +1,211 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Petualangan Bunga</title>
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  color: #633b59;
+  background: linear-gradient(#d9f4ff, #fff0f6);
+}
+
+h1 { padding: 15px 10px 0; }
+
+.info {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 15px;
+}
+
+#game {
+  height: 65vh;
+  min-height: 350px;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(#78d5ff 0%, #e0f8ff 65%, #71d66c 65%);
+  border: 5px solid white;
+  border-radius: 20px;
+  margin: 12px;
+}
+
+.flower {
+  position: absolute;
+  top: -50px;
+  font-size: 38px;
+  cursor: pointer;
+  animation: jatuh 5s linear forwards;
+  user-select: none;
+}
+
+@keyframes jatuh {
+  to { top: 110%; transform: rotate(360deg); }
+}
+
+#chest {
+  display: none;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 100px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  animation: bersinar 1s infinite alternate;
+}
+
+@keyframes bersinar {
+  to { filter: drop-shadow(0 0 20px gold); }
+}
+
+#pesan {
+  display: none;
+  position: absolute;
+  inset: 0;
+  background: #4b2859dd;
+  color: white;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 20px;
+}
+
+#pesan .boneka { font-size: 100px; }
+#pesan p { font-size: 22px; line-height: 1.5; }
+
+button {
+  border: none;
+  border-radius: 12px;
+  padding: 12px 22px;
+  background: #ffcf55;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#mulai { margin: 12px; }
+</style>
+</head>
+<body>
+
+<h1>🌸 Petualangan Bunga 🌸</h1>
+<p>Tangkap 10 bunga untuk mendapatkan hadiah!</p>
+
+<div class="info">
+  Bunga: <span id="skor">0</span> / 10
+  &nbsp; | &nbsp;
+  Waktu: <span id="waktu">45</span> detik
+</div>
+
+<div id="game">
+  <button id="chest" onclick="bukaPeti()">🎁</button>
+
+  <div id="pesan">
+    <div class="boneka">🧸</div>
+    <h2>Hadiah untukmu!</h2>
+    <p>Kamu hebat! 💖<br>
+    Terus semangat dan raih impianmu!</p>
+    <button onclick="mulaiGame()">Main Lagi</button>
+  </div>
+</div>
+
+<button id="mulai" onclick="mulaiGame()">
+  Mulai Permainan
+</button>
+
+<script>
+let skor = 0;
+let waktu = 45;
+let aktif = false;
+let intervalBunga;
+let intervalWaktu;
+
+const game = document.getElementById("game");
+
+function buatBunga() {
+  if (!aktif || skor >= 10) return;
+
+  const bunga = document.createElement("div");
+  bunga.className = "flower";
+  bunga.textContent = ["🌸", "🌼", "🌺"][
+    Math.floor(Math.random() * 3)
+  ];
+
+  bunga.style.left = Math.random() * 90 + "%";
+  game.appendChild(bunga);
+
+  bunga.onclick = function() {
+    if (!aktif) return;
+
+    skor++;
+    document.getElementById("skor").textContent = skor;
+    bunga.remove();
+
+    if (skor >= 10) menang();
+  };
+
+  bunga.addEventListener("animationend", () => bunga.remove());
+}
+
+function mulaiGame() {
+  clearInterval(intervalBunga);
+  clearInterval(intervalWaktu);
+
+  document.querySelectorAll(".flower").forEach(b => b.remove());
+
+  skor = 0;
+  waktu = 45;
+  aktif = true;
+
+  document.getElementById("skor").textContent = skor;
+  document.getElementById("waktu").textContent = waktu;
+  document.getElementById("chest").style.display = "none";
+  document.getElementById("pesan").style.display = "none";
+  document.getElementById("mulai").textContent = "Permainan Berjalan";
+
+  buatBunga();
+  intervalBunga = setInterval(buatBunga, 700);
+
+  intervalWaktu = setInterval(() => {
+    if (!aktif) return;
+
+    waktu--;
+    document.getElementById("waktu").textContent = waktu;
+
+    if (waktu <= 0) {
+      aktif = false;
+      clearInterval(intervalBunga);
+      clearInterval(intervalWaktu);
+      document.getElementById("mulai").textContent = "Coba Lagi";
+      alert("Waktu habis! Ayo coba lagi!");
+    }
+  }, 1000);
+}
+
+function menang() {
+  aktif = false;
+  clearInterval(intervalBunga);
+  clearInterval(intervalWaktu);
+
+  document.querySelectorAll(".flower").forEach(b => b.remove());
+
+  document.getElementById("chest").style.display = "block";
+  document.getElementById("mulai").textContent = "Permainan Selesai";
+}
+
+function bukaPeti() {
+  if (skor >= 10) {
+    document.getElementById("pesan").style.display = "flex";
+  }
+}
+</script>
+
+</body>
+</html>
