@@ -4,722 +4,1114 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Petualangan Bunga</title>
+<title>Petualangan Bunga 💗</title>
 
 <style>
-* {
-  box-sizing: border-box;
+:root {
+  --pink: #ff75ad;
+  --pink-light: #fff0f6;
+  --pink-dark: #b82f70;
+  --gold: #ffe5a3;
+  --wine: #6c2148;
 }
+
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-family: Georgia, "Times New Roman", serif;
+  color: #773452;
   text-align: center;
-  color: #633b59;
-  background: linear-gradient(#d9f4ff, #fff0f6);
+  background:
+    radial-gradient(ellipse at top, #fffafd 0%, transparent 65%),
+    linear-gradient(145deg, #ffeaf3, #ffd1e4 48%, #fff1f7);
 }
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border: none;
+  transition: transform .2s, box-shadow .2s;
+}
+
+button:hover { transform: translateY(-2px); }
+
+button:active { transform: scale(.97); }
+
+.hidden { display: none !important; }
 
 h1 {
-  padding: 15px 10px 0;
+  color: #c13d7b;
+  text-shadow: 0 3px 12px #fff;
 }
 
-.info {
-  font-size: 20px;
+p { line-height: 1.7; }
+
+#flowerScreen {
+  min-height: 100vh;
+  padding: 28px 16px;
+}
+
+.subtitle {
+  color: #a64c75;
+  font-size: 1.05rem;
+}
+
+.score-panel {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 18px auto;
+}
+
+.pill {
+  background: #ffffffc9;
+  border: 1px solid #ffb6d1;
+  border-radius: 30px;
+  padding: 10px 20px;
+  box-shadow: 0 5px 18px #dc6f9b20;
   font-weight: bold;
-  margin: 15px;
 }
 
 #game {
-  height: 65vh;
-  min-height: 350px;
   position: relative;
+  width: min(100%, 760px);
+  height: 390px;
+  margin: 20px auto;
   overflow: hidden;
-  background: linear-gradient(
-    #78d5ff 0%,
-    #e0f8ff 65%,
-    #71d66c 65%
-  );
-  border: 5px solid white;
-  border-radius: 20px;
-  margin: 12px;
+  border: 2px solid #ffbad4;
+  border-radius: 26px;
+  background:
+    radial-gradient(circle at 50% 20%, #fff 0%, transparent 55%),
+    linear-gradient(#ffe6f1, #ffd1e4 70%, #f6bad3);
+  box-shadow: 0 15px 45px #b82f7020, inset 0 0 25px #fff9;
 }
 
-/* PERMAINAN BUNGA */
+#game::after {
+  content: "🌷       🌸        🌷       🌼";
+  position: absolute;
+  bottom: 8px;
+  left: 0;
+  right: 0;
+  font-size: 25px;
+  opacity: .8;
+  pointer-events: none;
+}
 
 .flower {
   position: absolute;
-  top: -50px;
-  font-size: 38px;
-  cursor: pointer;
-  animation: jatuh 5s linear forwards;
-  user-select: none;
-  z-index: 1;
+  z-index: 2;
+  border: 0;
+  background: transparent;
+  font-size: 34px;
+  padding: 0;
+  line-height: 1;
+  filter: drop-shadow(0 4px 4px #a64c7530);
+  animation: flowerSpin 3s linear infinite;
 }
 
-@keyframes jatuh {
-  to {
-    top: 110%;
-    transform: rotate(360deg);
-  }
+@keyframes flowerSpin {
+  0% { rotate: -12deg; }
+  50% { rotate: 12deg; }
+  100% { rotate: -12deg; }
 }
 
-/* PETI HADIAH */
-
-#chest {
-  display: none;
-  position: absolute;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 100px;
-  cursor: pointer;
-  background: none;
-  border: none;
-  animation: bersinar 1s infinite alternate;
-  z-index: 3;
+.primary-btn {
+  padding: 13px 25px;
+  border-radius: 30px;
+  color: white;
+  font-weight: bold;
+  letter-spacing: .4px;
+  background: linear-gradient(135deg, #ff8cbb, #d84787);
+  box-shadow: 0 7px 20px #cf4b872e;
 }
 
-@keyframes bersinar {
-  to {
-    filter: drop-shadow(0 0 20px gold);
-  }
+.secondary-btn {
+  padding: 12px 22px;
+  border-radius: 28px;
+  color: #a8346c;
+  background: #fff;
+  border: 1px solid #ffc2d9;
 }
 
-/* TAHAP SEPEDA */
+#chestScreen {
+  min-height: 100vh;
+  padding: 50px 20px;
+  background: radial-gradient(ellipse, #fff 0%, #ffe3ef 55%, #ffc8df 100%);
+}
+
+.chest {
+  display: block;
+  margin: 25px auto;
+  font-size: clamp(90px, 18vw, 150px);
+  background: transparent;
+  filter: drop-shadow(0 12px 16px #ba417b40);
+  animation: chestFloat 2s ease-in-out infinite;
+}
+
+@keyframes chestFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+/* Tantangan sepeda */
 
 #bikeStage {
-  display: none;
-  position: absolute;
-  inset: 0;
-  z-index: 5;
-  background: linear-gradient(
-    #c8f0ff 0%,
-    #f4ffe9 65%,
-    #71d66c 65%,
-    #71d66c 100%
-  );
-  padding: 12px;
-  overflow: hidden;
+  min-height: 100vh;
+  padding: 24px 15px;
+  background: linear-gradient(#fff0f7, #ffd3e6);
 }
 
-#bikeStage h2 {
-  font-size: 23px;
-  margin: 8px 0;
-}
-
-#bikeStage p {
-  margin: 8px 0;
-}
-
-#bikeInfo {
-  font-weight: bold;
-  margin: 12px 0;
-}
-
-#bikeTrack {
+#track {
   position: relative;
-  width: 100%;
-  height: 190px;
+  width: min(100%, 800px);
+  height: 230px;
   overflow: hidden;
-  background: linear-gradient(
-    to bottom,
-    transparent 0 65%,
-    #b88b5a 65% 100%
-  );
-  border-bottom: 8px solid #6d4a32;
-  border-radius: 12px;
+  margin: 25px auto 16px;
+  border: 2px solid #ed9cbe;
+  border-radius: 24px;
+  background: linear-gradient(#fff5fa 0%, #ffe4f0 72%, #f4b9d2 72%);
+  box-shadow: 0 10px 35px #b82f7020;
 }
 
-#bikePlayer {
+#track::after {
+  content: "";
   position: absolute;
-  left: 12%;
-  bottom: 12px;
-  font-size: 42px;
+  left: 0;
+  right: 0;
+  bottom: 51px;
+  border-bottom: 3px dashed #d681a5;
+}
+
+#bike {
+  position: absolute;
+  z-index: 3;
+  left: 7%;
+  bottom: 48px;
+  font-size: 46px;
+}
+
+#bike.jumping {
+  animation: jump .65s ease-out;
+}
+
+@keyframes jump {
+  0% { transform: translateY(0) rotate(0); }
+  45% { transform: translateY(-100px) rotate(-12deg); }
+  100% { transform: translateY(0) rotate(0); }
+}
+
+.obstacle {
+  position: absolute;
+  z-index: 3;
+  bottom: 46px;
+  font-size: 35px;
   line-height: 1;
-  z-index: 2;
-  user-select: none;
 }
 
-#bikePlayer.jumping {
-  animation: bikeJump 650ms ease-out;
-}
-
-@keyframes bikeJump {
-  0% {
-    transform: translateY(0);
-  }
-
-  45% {
-    transform: translateY(-100px);
-  }
-
-  100% {
-    transform: translateY(0);
-  }
-}
-
-/* RINTANGAN */
-
-.bikeObstacle {
+#finishFlag {
   position: absolute;
-  left: 100%;
-  bottom: 12px;
-  font-size: 36px;
-  line-height: 1;
-  z-index: 1;
-  user-select: none;
+  right: 12px;
+  bottom: 48px;
+  font-size: 34px;
 }
 
-#bikeFinish {
-  display: none;
-  position: absolute;
-  right: 8px;
-  bottom: 12px;
-  font-size: 38px;
-}
-
-#bikeStatus {
-  font-weight: bold;
-  min-height: 24px;
+.bike-controls {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 18px 0;
 }
 
 #jumpButton {
-  margin-top: 8px;
-  background: #ffcf55;
-  touch-action: manipulation;
-  position: relative;
-  z-index: 6;
-}
-
-/* PESAN AKHIR */
-
-#pesan {
-  display: none;
-  position: absolute;
-  inset: 0;
-  z-index: 10;
-  background: #4b2859ee;
-  color: white;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  padding: 20px;
-  overflow-y: auto;
-}
-
-#pesan .boneka {
-  font-size: 100px;
-}
-
-#pesan p {
-  font-size: 22px;
-  line-height: 1.5;
-}
-
-/* TOMBOL */
-
-button {
-  border: none;
-  border-radius: 12px;
-  padding: 12px 22px;
-  background: #ffcf55;
-  font-size: 17px;
+  min-width: 180px;
+  padding: 16px 28px;
+  border-radius: 30px;
+  color: #fff;
   font-weight: bold;
-  cursor: pointer;
+  font-size: 1.05rem;
+  background: linear-gradient(135deg, #ff8cbb, #bd3675);
+  box-shadow: 0 7px 20px #bd367530;
 }
 
-button:disabled {
-  cursor: default;
+.hint {
+  color: #96506f;
+  font-size: .94rem;
 }
 
-#mulai {
-  margin: 12px;
+/* Layar hadiah romantis */
+
+#romanticReveal {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  padding: 32px 15px 55px;
+  color: #fff9fd;
+  background:
+    radial-gradient(ellipse at 50% 38%, #b9467d 0%, transparent 55%),
+    linear-gradient(160deg, #9f315f, #6b204b 60%, #43162f);
+  isolation: isolate;
 }
 
-/* TAMPILAN PONSEL */
+#romanticReveal::before,
+#romanticReveal::after {
+  content: "";
+  position: absolute;
+  width: 330px;
+  height: 330px;
+  border-radius: 50%;
+  background: #ffacd44d;
+  filter: blur(75px);
+  z-index: -1;
+  animation: glow 5s ease-in-out infinite alternate;
+}
+
+#romanticReveal::before {
+  top: 5%;
+  left: -150px;
+}
+
+#romanticReveal::after {
+  right: -150px;
+  bottom: 4%;
+  animation-delay: 1.5s;
+}
+
+@keyframes glow {
+  from { opacity: .3; transform: scale(.8); }
+  to { opacity: .9; transform: scale(1.25); }
+}
+
+.reveal-inner {
+  width: min(100%, 650px);
+  margin: 0 auto;
+  animation: cinematicIn 1.8s cubic-bezier(.2,.8,.2,1) both;
+}
+
+@keyframes cinematicIn {
+  from { opacity: 0; transform: translateY(35px) scale(.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.eyebrow {
+  color: #ffe4b2;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  font-family: Arial, sans-serif;
+  font-size: .72rem;
+}
+
+.romantic-title {
+  margin: 14px 0;
+  color: #fff4fa;
+  font-size: clamp(2rem, 8vw, 3.6rem);
+  line-height: 1.15;
+  text-shadow: 0 0 30px #ffc1df70;
+}
+
+.gold-line {
+  width: 110px;
+  height: 2px;
+  margin: 20px auto;
+  background: linear-gradient(90deg, transparent, #ffe5a3, transparent);
+}
+
+.gift-scene {
+  position: relative;
+  margin: 18px auto 12px;
+  min-height: 265px;
+  display: grid;
+  place-items: center;
+}
+
+.gift-aura {
+  position: absolute;
+  width: 230px;
+  height: 230px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffe6a54d, #ff9ac51c 50%, transparent 70%);
+  animation: auraPulse 3s ease-in-out infinite;
+}
+
+@keyframes auraPulse {
+  0%, 100% { transform: scale(.9); opacity: .6; }
+  50% { transform: scale(1.18); opacity: 1; }
+}
+
+.teddy {
+  position: relative;
+  z-index: 1;
+  font-size: clamp(100px, 26vw, 155px);
+  line-height: 1.4;
+  filter: drop-shadow(0 12px 18px #2a0d1c60);
+  animation: teddyAppear 1.2s .4s both, teddyFloat 3s 1.6s ease-in-out infinite;
+}
+
+@keyframes teddyAppear {
+  from { opacity: 0; transform: scale(.4) rotate(-15deg); }
+  to { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+@keyframes teddyFloat {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -9px; }
+}
+
+.ribbon {
+  position: absolute;
+  z-index: 2;
+  top: 20px;
+  right: calc(50% - 100px);
+  font-size: 53px;
+  transform: rotate(15deg);
+  filter: drop-shadow(0 5px 7px #270d1a50);
+}
+
+.gift-caption {
+  margin: 0;
+  color: #ffe5b2;
+  font-style: italic;
+  font-size: 1.1rem;
+}
+
+.love-letter {
+  position: relative;
+  margin: 28px auto;
+  padding: clamp(24px, 6vw, 38px);
+  border: 1px solid #ffe1b880;
+  border-radius: 24px;
+  background: linear-gradient(145deg, #fff8fcf5, #ffe8f2f5);
+  color: #813451;
+  box-shadow: 0 18px 60px #220b1d35, inset 0 0 25px #fff;
+}
+
+.love-letter::before {
+  content: "♥";
+  position: absolute;
+  top: -18px;
+  left: calc(50% - 19px);
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  color: white;
+  background: linear-gradient(135deg, #ff9bc3, #ca3e7e);
+  border-radius: 50%;
+  box-shadow: 0 5px 14px #a52c6538;
+}
+
+.letter-to {
+  margin: 0 0 12px;
+  color: #b33972;
+  font-style: italic;
+  font-size: 1.15rem;
+}
+
+.letter-message {
+  white-space: pre-line;
+  font-size: 1.05rem;
+  line-height: 1.95;
+}
+
+.signature {
+  margin-top: 25px;
+  color: #a9366b;
+  font-style: italic;
+  font-size: 1.2rem;
+}
+
+.final-heart {
+  display: inline-block;
+  color: #ffb0d1;
+  font-size: 28px;
+  animation: heartBeat 1.2s infinite;
+}
+
+@keyframes heartBeat {
+  0%, 100% { transform: scale(1); }
+  20% { transform: scale(1.2); }
+  40% { transform: scale(1); }
+  60% { transform: scale(1.12); }
+}
+
+/* Kelopak dan hati */
+
+.particle {
+  position: fixed;
+  top: -40px;
+  z-index: 10;
+  pointer-events: none;
+  user-select: none;
+  animation: fall linear forwards;
+  filter: drop-shadow(0 2px 4px #fff5);
+}
+
+@keyframes fall {
+  0% { transform: translate3d(0, -5vh, 0) rotate(0); opacity: 0; }
+  10% { opacity: .95; }
+  100% { transform: translate3d(var(--drift), 110vh, 0) rotate(600deg); opacity: 0; }
+}
+
+/* Kontrol musik */
+
+.music-control {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 15px;
+  border: 1px solid #ffc4da;
+  border-radius: 30px;
+  color: #9c3265;
+  background: #fff7fbf0;
+  box-shadow: 0 5px 20px #76204520;
+  font-size: .85rem;
+  font-weight: bold;
+  backdrop-filter: blur(8px);
+}
+
+#musicNote {
+  font-size: 1.2rem;
+}
 
 @media (max-width: 480px) {
-  #bikeStage {
-    padding: 8px;
-  }
-
-  #bikeTrack {
-    height: 170px;
-  }
-
-  #bikeStage h2 {
-    font-size: 19px;
-  }
-
-  #bikeStage p {
-    font-size: 14px;
-  }
-
-  #bikeInfo {
-    font-size: 14px;
-  }
-
-  #pesan .boneka {
-    font-size: 72px;
-  }
-
-  #pesan p {
-    font-size: 18px;
-  }
+  #game { height: 340px; }
+  #track { height: 210px; }
+  .love-letter { border-radius: 18px; }
+  .music-control { right: 10px; bottom: 10px; }
 }
 </style>
 </head>
 
 <body>
 
-<h1>🌸 Petualangan Bunga 🌸</h1>
-<p>Tangkap 10 bunga untuk mendapatkan hadiah!</p>
+<!-- TAHAP 1: MENANGKAP BUNGA -->
 
-<div class="info">
-  Bunga: <span id="skor">0</span> / 10
-  &nbsp; | &nbsp;
-  Waktu: <span id="waktu">45</span> detik
-</div>
+<section id="flowerScreen">
+  <h1>🌸 Petualangan Bunga 🌸</h1>
+  <p class="subtitle">Tangkap bunga-bunganya dan temukan hadiah rahasia!</p>
 
-<div id="game">
+  <div class="score-panel">
+    <div class="pill">🌷 Bunga: <span id="score">0</span>/10</div>
+    <div class="pill">⏰ Waktu: <span id="time">45</span> detik</div>
+  </div>
 
-  <button id="chest" onclick="bukaPeti()">🎁</button>
+  <div id="game" aria-label="Area permainan menangkap bunga"></div>
 
-  <!-- TAHAP SEPEDA -->
-  <div id="bikeStage">
-    <h2>🚲 Perjalanan Menuju Hadiah</h2>
-    <p>Lompati rintangan dan capai garis akhir!</p>
+  <button class="primary-btn" id="startButton" onclick="mulaiGame()">
+    🌸 Mulai Petualangan
+  </button>
+  <p class="hint" id="flowerHint">Klik bunga yang jatuh sebanyak 10 kali!</p>
+</section>
 
-    <div id="bikeInfo">
-      Nyawa:
-      <span id="nyawa">❤️❤️❤️</span>
-      &nbsp; | &nbsp;
-      Jarak:
-      <span id="jarak">0</span>%
+<!-- PETI HADIAH -->
+
+<section id="chestScreen" class="hidden">
+  <p class="eyebrow">Sebuah kejutan menantimu</p>
+  <h1>🎀 Kamu Berhasil! 🎀</h1>
+  <p>Semua bunga sudah terkumpul.<br>Namun, masih ada satu petualangan lagi...</p>
+
+  <button class="chest" onclick="bukaPeti()" aria-label="Buka peti hadiah">
+    🎁
+  </button>
+
+  <button class="primary-btn" onclick="bukaPeti()">
+    BUKA HADIAH ✨
+  </button>
+</section>
+
+<!-- TAHAP 2: SEPEDA -->
+
+<section id="bikeStage" class="hidden">
+  <h1>🚲 Perjalanan Menuju Cinta 💗</h1>
+  <p>Lewati semua rintangan untuk menemukan kejutan istimewa!</p>
+
+  <div class="score-panel">
+    <div class="pill">❤️ Nyawa: <span id="lives">3</span></div>
+    <div class="pill">✨ Jarak: <span id="distance">0</span>%</div>
+  </div>
+
+  <div id="track">
+    <div id="bike">🚲</div>
+    <div id="finishFlag">🏁</div>
+  </div>
+
+  <div class="bike-controls">
+    <button id="jumpButton" onclick="lompat()">⬆ LOMPAT!</button>
+  </div>
+
+  <p class="hint" id="bikeHint">
+    Tekan tombol LOMPAT atau spasi untuk menghindari rintangan.
+  </p>
+</section>
+
+<!-- HADIAH ROMANTIS -->
+
+<section id="romanticReveal" class="hidden">
+  <div class="reveal-inner">
+    <p class="eyebrow">A little surprise, made with love</p>
+    <h1 class="romantic-title">Untuk Istriku Tercinta</h1>
+    <div class="gold-line"></div>
+
+    <div class="gift-scene">
+      <div class="gift-aura"></div>
+      <div class="ribbon">🎀</div>
+      <div class="teddy">🧸</div>
     </div>
 
-    <div id="bikeTrack">
-      <div id="bikePlayer">🚲</div>
-      <div id="bikeFinish">🏁</div>
+    <p class="gift-caption">Hadiah kecil untuk seseorang yang begitu berarti...</p>
+
+    <div class="love-letter">
+      <p class="letter-to">Hallo Istriku IIS SYARIFAH!! 💗</p>
+
+      <div class="letter-message" id="loveMessage"></div>
+
+      <div class="signature">
+        Dengan seluruh cinta yang aku punya,<br>
+        untukmu, hari ini dan selamanya.
+        <p class="final-heart">♥</p>
+      </div>
     </div>
 
-    <p id="bikeStatus">
-      Siap-siap! Rintangan akan datang lebih cepat.
+    <p style="color:#ffe4b2;font-style:italic">
+      Terima kasih telah menjadi rumah terindah bagi hatiku. 🌹
     </p>
 
-    <button id="jumpButton" onclick="lompat()">
-      LOMPAT ⬆️
+    <button class="primary-btn" onclick="mainLagi()">
+      💗 Main Lagi
     </button>
   </div>
+</section>
 
-  <!-- PESAN RAHASIA -->
-  <div id="pesan">
-    <div class="boneka">🧸</div>
-
-    <h2>Hallo Istriku IIS SYARIFAH!!</h2>
-
-    <p>
-      Kamu hebat! 💖<br>
-      Terima kasih sudah menjadi istri dan ibu yang baik!
-    </p>
-
-    <button onclick="mulaiGame()">Main Lagi</button>
-  </div>
-
-</div>
-
-<button id="mulai" onclick="mulaiGame()">
-  Mulai Permainan
+<button class="music-control" id="musicButton" onclick="toggleMusic()" aria-label="Putar atau jeda musik">
+  <span id="musicNote">♫</span>
+  <span id="musicLabel">Putar Musik</span>
 </button>
 
 <script>
 /* ==================================
-   VARIABEL PERMAINAN BUNGA
+   PENGATURAN UMUM
 ================================== */
 
-let skor = 0;
-let waktu = 45;
-let aktif = false;
-let intervalBunga;
-let intervalWaktu;
+const TOTAL_BUNGA = 10;
+const DURASI_GAME = 45;
 
-const game = document.getElementById("game");
+let score = 0;
+let timeLeft = DURASI_GAME;
+let flowerTimer = null;
+let countdownTimer = null;
+let flowerRunning = false;
 
-/* ==================================
-   VARIABEL PERMAINAN SEPEDA
-================================== */
+let lives = 3;
+let distance = 0;
+let bikeTimer = null;
+let bikeRunning = false;
+let jumping = false;
+let jumpTimeout = null;
+let obstacleSpawnTimer = null;
+let obstacles = [];
+let nextObstacleId = 0;
 
-let intervalSepeda;
-let nyawaSepeda = 3;
-let jarakSepeda = 0;
-let sedangMelompat = false;
-let sepedaAktif = false;
-let waktuLompat;
-
-let rintanganSepeda = [];
-let penghitungSpawn = 0;
-
-/* ==================================
-   PERMAINAN MENANGKAP BUNGA
-================================== */
-
-function buatBunga() {
-  if (!aktif || skor >= 10) return;
-
-  const bunga = document.createElement("div");
-
-  bunga.className = "flower";
-
-  bunga.textContent = ["🌸", "🌼", "🌺"][
-    Math.floor(Math.random() * 3)
-  ];
-
-  bunga.style.left = Math.random() * 90 + "%";
-
-  game.appendChild(bunga);
-
-  bunga.onclick = function() {
-    if (!aktif) return;
-
-    skor++;
-
-    document.getElementById("skor").textContent = skor;
-
-    bunga.remove();
-
-    if (skor >= 10) {
-      menang();
-    }
-  };
-
-  bunga.addEventListener("animationend", () => bunga.remove());
-}
+let particleTimer = null;
+let particlesRunning = false;
 
 /* ==================================
-   MEMULAI ULANG PERMAINAN BUNGA
+   TAHAP BUNGA
 ================================== */
 
 function mulaiGame() {
-  clearInterval(intervalBunga);
-  clearInterval(intervalWaktu);
-  clearInterval(intervalSepeda);
-  clearTimeout(waktuLompat);
+  clearInterval(flowerTimer);
+  clearInterval(countdownTimer);
 
-  sepedaAktif = false;
-  sedangMelompat = false;
-  rintanganSepeda = [];
+  flowerRunning = true;
+  score = 0;
+  timeLeft = DURASI_GAME;
 
-  document.querySelectorAll(".flower").forEach(b => b.remove());
+  document.getElementById("score").textContent = score;
+  document.getElementById("time").textContent = timeLeft;
+  document.getElementById("flowerHint").textContent =
+    "Tangkap 10 bunga sebelum waktunya habis!";
+  document.getElementById("startButton").textContent =
+    "🌸 Permainan Berlangsung...";
 
-  document.querySelectorAll(".bikeObstacle").forEach(r => r.remove());
+  const game = document.getElementById("game");
+  game.innerHTML = "";
 
-  skor = 0;
-  waktu = 45;
-  aktif = true;
+  document.getElementById("chestScreen").classList.add("hidden");
+  document.getElementById("bikeStage").classList.add("hidden");
+  document.getElementById("romanticReveal").classList.add("hidden");
+  document.getElementById("flowerScreen").classList.remove("hidden");
 
-  document.getElementById("skor").textContent = skor;
-  document.getElementById("waktu").textContent = waktu;
+  for (let i = 0; i < 3; i++) buatBunga();
 
-  document.getElementById("chest").style.display = "none";
-  document.getElementById("chest").disabled = false;
+  flowerTimer = setInterval(() => {
+    if (!flowerRunning) return;
 
-  document.getElementById("bikeStage").style.display = "none";
-  document.getElementById("pesan").style.display = "none";
+    buatBunga();
+  }, 850);
 
-  document.getElementById("mulai").textContent = "Permainan Berjalan";
+  countdownTimer = setInterval(() => {
+    if (!flowerRunning) return;
 
-  buatBunga();
+    timeLeft--;
+    document.getElementById("time").textContent = timeLeft;
 
-  intervalBunga = setInterval(buatBunga, 700);
+    if (timeLeft <= 0) {
+      clearInterval(countdownTimer);
+      clearInterval(flowerTimer);
+      flowerRunning = false;
 
-  intervalWaktu = setInterval(() => {
-    if (!aktif) return;
-
-    waktu--;
-
-    document.getElementById("waktu").textContent = waktu;
-
-    if (waktu <= 0) {
-      aktif = false;
-
-      clearInterval(intervalBunga);
-      clearInterval(intervalWaktu);
-
-      document.getElementById("mulai").textContent = "Coba Lagi";
-
-      alert("Waktu habis! Ayo coba lagi!");
+      document.getElementById("startButton").textContent = "Coba Lagi 🌸";
+      document.getElementById("flowerHint").textContent =
+        "Waktu habis! Tidak apa-apa, ayo coba lagi.";
     }
   }, 1000);
 }
 
-/* ==================================
-   BERHASIL MENGUMPULKAN 10 BUNGA
-================================== */
+function buatBunga() {
+  if (!flowerRunning || score >= TOTAL_BUNGA) return;
 
-function menang() {
-  aktif = false;
+  const game = document.getElementById("game");
+  const flower = document.createElement("button");
+  const flowerTypes = ["🌸", "🌷", "🌺", "🌼", "💮"];
 
-  clearInterval(intervalBunga);
-  clearInterval(intervalWaktu);
+  flower.type = "button";
+  flower.className = "flower";
+  flower.textContent =
+    flowerTypes[Math.floor(Math.random() * flowerTypes.length)];
 
-  document.querySelectorAll(".flower").forEach(b => b.remove());
+  flower.setAttribute("aria-label", "Tangkap bunga");
 
-  document.getElementById("chest").style.display = "block";
+  const maxLeft = Math.max(0, game.clientWidth - 45);
+  flower.style.left = Math.random() * maxLeft + "px";
+  flower.style.top = "-45px";
 
-  document.getElementById("mulai").textContent = "Permainan Selesai";
+  game.appendChild(flower);
+
+  let y = -45;
+  const speed = 1.5 + Math.random() * 1.7;
+
+  const fallTimer = setInterval(() => {
+    if (!flowerRunning || !flower.isConnected) {
+      clearInterval(fallTimer);
+      flower.remove();
+      return;
+    }
+
+    y += speed;
+    flower.style.top = y + "px";
+
+    if (y > game.clientHeight + 10) {
+      clearInterval(fallTimer);
+      flower.remove();
+    }
+  }, 25);
+
+  flower.addEventListener("click", () => {
+    if (!flowerRunning) return;
+
+    clearInterval(fallTimer);
+    flower.remove();
+
+    score++;
+    document.getElementById("score").textContent = score;
+
+    if (score >= TOTAL_BUNGA) {
+      menangBunga();
+    }
+  });
 }
 
-/* ==================================
-   MEMBUKA PETI HADIAH
-================================== */
+function menangBunga() {
+  flowerRunning = false;
+  clearInterval(flowerTimer);
+  clearInterval(countdownTimer);
+
+  document.getElementById("game").innerHTML = "";
+  document.getElementById("flowerScreen").classList.add("hidden");
+  document.getElementById("chestScreen").classList.remove("hidden");
+
+  startParticles("flower");
+}
 
 function bukaPeti() {
-  if (skor < 10 || aktif || sepedaAktif) return;
+  stopParticles();
 
-  document.getElementById("chest").style.display = "none";
-  document.getElementById("chest").disabled = true;
-
-  document.getElementById("pesan").style.display = "none";
-  document.getElementById("bikeStage").style.display = "block";
+  document.getElementById("chestScreen").classList.add("hidden");
+  document.getElementById("bikeStage").classList.remove("hidden");
 
   mulaiSepeda();
 }
 
 /* ==================================
-   MEMBUAT RINTANGAN BARU
-================================== */
-
-function buatRintangan() {
-  const lintasan = document.getElementById("bikeTrack");
-
-  const rintangan = document.createElement("div");
-
-  rintangan.className = "bikeObstacle";
-
-  /* Variasi rintangan */
-  const pilihan = ["🪵", "🪨", "🌵"];
-
-  rintangan.textContent =
-    pilihan[Math.floor(Math.random() * pilihan.length)];
-
-  /* Setiap rintangan baru muncul dari sisi kanan */
-  rintangan.style.left = lintasan.clientWidth + "px";
-
-  lintasan.appendChild(rintangan);
-
-  rintanganSepeda.push({
-    elemen: rintangan,
-    x: lintasan.clientWidth
-  });
-}
-
-/* ==================================
-   MEMULAI TAHAP SEPEDA
+   TAHAP SEPEDA
 ================================== */
 
 function mulaiSepeda() {
-  clearInterval(intervalSepeda);
-  clearTimeout(waktuLompat);
+  clearInterval(bikeTimer);
+  clearInterval(obstacleSpawnTimer);
+  clearTimeout(jumpTimeout);
 
-  document.querySelectorAll(".bikeObstacle").forEach(r => r.remove());
+  bikeRunning = true;
+  jumping = false;
+  lives = 3;
+  distance = 0;
+  nextObstacleId = 0;
+  obstacles = [];
 
-  rintanganSepeda = [];
+  const track = document.getElementById("track");
 
-  nyawaSepeda = 3;
-  jarakSepeda = 0;
-  sedangMelompat = false;
-  penghitungSpawn = 0;
-  sepedaAktif = true;
+  track.querySelectorAll(".obstacle").forEach(el => el.remove());
 
-  const pemain = document.getElementById("bikePlayer");
-  const garisAkhir = document.getElementById("bikeFinish");
-  const tombolLompat = document.getElementById("jumpButton");
+  document.getElementById("bike").classList.remove("jumping");
+  document.getElementById("bike").style.bottom = "48px";
+  document.getElementById("lives").textContent = lives;
+  document.getElementById("distance").textContent = distance;
+  document.getElementById("bikeHint").textContent =
+    "Hindari rintangan dan capai garis finis!";
+  document.getElementById("jumpButton").textContent = "⬆ LOMPAT!";
 
-  pemain.classList.remove("jumping");
+  obstacleSpawnTimer = setTimeout(() => {
+    if (bikeRunning) buatRintangan();
+  }, 1200);
 
-  garisAkhir.style.display = "none";
+  obstacleSpawnTimer = setInterval(() => {
+    if (!bikeRunning) return;
+    buatRintangan();
+  }, 1450);
 
-  tombolLompat.textContent = "LOMPAT ⬆️";
-  tombolLompat.onclick = lompat;
+  bikeTimer = setInterval(() => {
+    if (!bikeRunning) return;
 
-  document.getElementById("nyawa").textContent = "❤️❤️❤️";
-  document.getElementById("jarak").textContent = "0";
+    distance += 0.25;
 
-  document.getElementById("bikeStatus").textContent =
-    "Ayo! Lompati rintangan yang datang berturut-turut!";
+    if (distance > 100) distance = 100;
 
-  /*
-    Rintangan pertama muncul lebih dekat.
-    Tidak perlu menunggu lintasan kosong.
-  */
-  buatRintangan();
+    document.getElementById("distance").textContent =
+      Math.floor(distance);
 
-  rintanganSepeda[0].x =
-    document.getElementById("bikeTrack").clientWidth * 0.58;
+    gerakkanRintangan();
 
-  rintanganSepeda[0].elemen.style.left =
-    rintanganSepeda[0].x + "px";
-
-  intervalSepeda = setInterval(() => {
-    if (!sepedaAktif) return;
-
-    const lintasan = document.getElementById("bikeTrack");
-    const pemain = document.getElementById("bikePlayer");
-
-    /* PERJALANAN LEBIH SINGKAT */
-    jarakSepeda += 0.3;
-
-    document.getElementById("jarak").textContent =
-      Math.min(100, Math.floor(jarakSepeda));
-
-    /*
-      RINTANGAN MUNCUL LEBIH SERING.
-      Satu rintangan baru setiap sekitar 1,05 detik.
-    */
-    penghitungSpawn++;
-
-    if (penghitungSpawn >= 35) {
-      buatRintangan();
-      penghitungSpawn = 0;
-    }
-
-    /* GERAKKAN SEMUA RINTANGAN */
-    for (let i = rintanganSepeda.length - 1; i >= 0; i--) {
-      const data = rintanganSepeda[i];
-      const rintangan = data.elemen;
-
-      data.x -= 7.5;
-      rintangan.style.left = data.x + "px";
-
-      /* PERIKSA TABRAKAN */
-      const sepedaRect = pemain.getBoundingClientRect();
-      const rintanganRect = rintangan.getBoundingClientRect();
-
-      const bertabrakan =
-        sepedaRect.right > rintanganRect.left + 5 &&
-        sepedaRect.left < rintanganRect.right - 5 &&
-        sepedaRect.bottom > rintanganRect.top + 5 &&
-        sepedaRect.top < rintanganRect.bottom - 5;
-
-      if (bertabrakan && !sedangMelompat) {
-        nyawaSepeda--;
-
-        document.getElementById("nyawa").textContent =
-          "❤️".repeat(nyawaSepeda) +
-          "🖤".repeat(3 - nyawaSepeda);
-
-        /* Hapus rintangan yang sudah ditabrak */
-        rintangan.remove();
-        rintanganSepeda.splice(i, 1);
-
-        if (nyawaSepeda <= 0) {
-          gagalSepeda();
-          return;
-        }
-
-        document.getElementById("bikeStatus").textContent =
-          "Aduh! Nyawamu tersisa " + nyawaSepeda + ". Tetap semangat!";
-        continue;
-      }
-
-      /* HAPUS RINTANGAN YANG SUDAH LEWAT */
-      if (data.x < -60) {
-        rintangan.remove();
-        rintanganSepeda.splice(i, 1);
-      }
-    }
-
-    /* GARIS AKHIR */
-    if (jarakSepeda >= 85) {
-      garisAkhir.style.display = "block";
-    }
-
-    /* BERHASIL MENCAPAI TUJUAN */
-    if (jarakSepeda >= 100) {
+    if (distance >= 100) {
       menangSepeda();
     }
   }, 30);
 }
 
-/* ==================================
-   LOMPAT DENGAN SPASI ATAU TOMBOL
-================================== */
+function buatRintangan() {
+  if (!bikeRunning) return;
+
+  const track = document.getElementById("track");
+  const obstacle = document.createElement("div");
+  const types = ["🪵", "🪨", "🌵"];
+
+  obstacle.className = "obstacle";
+  obstacle.textContent = types[Math.floor(Math.random() * types.length)];
+  obstacle.style.left = track.clientWidth + 10 + "px";
+  obstacle.dataset.id = String(nextObstacleId++);
+
+  track.appendChild(obstacle);
+  obstacles.push(obstacle);
+}
+
+function gerakkanRintangan() {
+  const bike = document.getElementById("bike");
+  const bikeRect = bike.getBoundingClientRect();
+  const track = document.getElementById("track");
+  const trackRect = track.getBoundingClientRect();
+
+  obstacles = obstacles.filter(obstacle => {
+    if (!obstacle.isConnected) return false;
+
+    let x = parseFloat(obstacle.style.left);
+    x -= 5.5;
+    obstacle.style.left = x + "px";
+
+    if (x < -60) {
+      obstacle.remove();
+      return false;
+    }
+
+    const rect = obstacle.getBoundingClientRect();
+
+    const collision =
+      rect.left < bikeRect.right - 12 &&
+      rect.right > bikeRect.left + 12 &&
+      rect.top < bikeRect.bottom - 8 &&
+      rect.bottom > bikeRect.top + 8;
+
+    if (collision) {
+      obstacle.remove();
+
+      lives--;
+      document.getElementById("lives").textContent = lives;
+
+      if (lives <= 0) {
+        gagalSepeda();
+      }
+
+      return false;
+    }
+
+    return true;
+  });
+}
 
 function lompat() {
-  if (!sepedaAktif || sedangMelompat) return;
+  if (!bikeRunning || jumping) return;
 
-  sedangMelompat = true;
+  jumping = true;
 
-  const pemain = document.getElementById("bikePlayer");
+  const bike = document.getElementById("bike");
+  bike.classList.remove("jumping");
 
-  pemain.classList.remove("jumping");
+  // Memulai ulang animasi lompat.
+  void bike.offsetWidth;
+  bike.classList.add("jumping");
 
-  /* Memulai ulang animasi lompatan */
-  void pemain.offsetWidth;
-
-  pemain.classList.add("jumping");
-
-  clearTimeout(waktuLompat);
-
-  waktuLompat = setTimeout(() => {
-    pemain.classList.remove("jumping");
-    sedangMelompat = false;
+  jumpTimeout = setTimeout(() => {
+    bike.classList.remove("jumping");
+    jumping = false;
   }, 650);
 }
 
-/* ==================================
-   JIKA KEHILANGAN 3 NYAWA
-================================== */
-
 function gagalSepeda() {
-  sepedaAktif = false;
+  bikeRunning = false;
 
-  clearInterval(intervalSepeda);
-  clearTimeout(waktuLompat);
+  clearInterval(bikeTimer);
+  clearInterval(obstacleSpawnTimer);
+  clearTimeout(jumpTimeout);
 
-  sedangMelompat = false;
+  document.getElementById("bikeHint").textContent =
+    "Yah, belum berhasil! Coba lagi, kamu pasti bisa 💗";
 
-  document.getElementById("bikeStatus").textContent =
-    "Nyawamu habis! Coba lagi dan kalahkan semua rintangan.";
-
-  const tombolLompat = document.getElementById("jumpButton");
-
-  tombolLompat.textContent = "COBA LAGI 🔄";
-  tombolLompat.onclick = mulaiSepeda;
+  document.getElementById("jumpButton").textContent = "🔄 COBA LAGI";
+  document.getElementById("jumpButton").onclick = mulaiSepeda;
 }
-
-/* ==================================
-   BERHASIL MENCAPAI GARIS AKHIR
-================================== */
 
 function menangSepeda() {
-  sepedaAktif = false;
+  bikeRunning = false;
 
-  clearInterval(intervalSepeda);
-  clearTimeout(waktuLompat);
+  clearInterval(bikeTimer);
+  clearInterval(obstacleSpawnTimer);
+  clearTimeout(jumpTimeout);
 
-  document.getElementById("bikeStatus").textContent =
-    "Kamu berhasil sampai! Hadiahmu sudah menunggu 💖";
+  document.getElementById("bikeStage").classList.add("hidden");
+  document.getElementById("romanticReveal").classList.remove("hidden");
 
-  document.getElementById("bikeStage").style.display = "none";
-  document.getElementById("pesan").style.display = "flex";
+  // Pesan ditampilkan perlahan untuk efek surat cinta.
+  document.getElementById("loveMessage").textContent =
+    "Kamu hebat! 💖\n\n" +
+    "Terima kasih sudah menjadi istri dan ibu yang baik.\n\n" +
+    "Terima kasih untuk semua cinta, kesabaran, " +
+    "dan kebahagiaan yang kamu hadirkan dalam hidup kita.\n\n" +
+    "Semoga aku selalu bisa menjadi tempatmu pulang, " +
+    "temanmu tertawa, dan seseorang yang menggenggam tanganmu " +
+    "dalam setiap perjalanan hidup.\n\n" +
+    "Aku mungkin tidak selalu sempurna, tetapi cintaku untukmu " +
+    "akan selalu aku jaga.";
+
+  startParticles("romantic");
+}
+
+function mainLagi() {
+  stopParticles();
+
+  document.getElementById("romanticReveal").classList.add("hidden");
+  document.getElementById("chestScreen").classList.add("hidden");
+  document.getElementById("bikeStage").classList.add("hidden");
+  document.getElementById("flowerScreen").classList.remove("hidden");
+
+  document.getElementById("startButton").textContent =
+    "🌸 Mulai Petualangan";
+
+  mulaiGame();
 }
 
 /* ==================================
-   KONTROL KEYBOARD
+   ANIMASI KELopak DAN HATI
 ================================== */
 
-document.addEventListener("keydown", function(event) {
+function startParticles(mode) {
+  stopParticles();
+  particlesRunning = true;
+
+  const symbols = mode === "romantic"
+    ? ["🌸", "🌹", "💗", "💕", "✨", "💖"]
+    : ["🌸", "🌷", "✨", "💮"];
+
+  particleTimer = setInterval(() => {
+    if (!particlesRunning) return;
+
+    const particle = document.createElement("span");
+    particle.className = "particle";
+    particle.textContent =
+      symbols[Math.floor(Math.random() * symbols.length)];
+
+    particle.style.left = Math.random() * 100 + "vw";
+    particle.style.fontSize = (12 + Math.random() * 19) + "px";
+    particle.style.animationDuration = (5 + Math.random() * 6) + "s";
+    particle.style.setProperty(
+      "--drift",
+      (Math.random() * 180 - 90) + "px"
+    );
+
+    document.body.appendChild(particle);
+
+    setTimeout(() => particle.remove(), 12000);
+  }, mode === "romantic" ? 230 : 450);
+}
+
+function stopParticles() {
+  particlesRunning = false;
+  clearInterval(particleTimer);
+
+  document.querySelectorAll(".particle").forEach(p => p.remove());
+}
+
+/* ==================================
+   MUSIK PIANO LEMBUT
+   Musik hanya aktif setelah tombol ditekan.
+================================== */
+
+let audioContext = null;
+let musicMaster = null;
+let musicTimer = null;
+let musicPlaying = false;
+let melodyStep = 0;
+
+const melody = [
+  [523.25, 659.25, 783.99],
+  [493.88, 587.33, 739.99],
+  [440.00, 523.25, 659.25],
+  [392.00, 493.88, 587.33],
+  [440.00, 523.25, 659.25],
+  [392.00, 493.88, 587.33],
+  [349.23, 440.00, 523.25],
+  [392.00, 493.88, 587.33]
+];
+
+function bunyikanNada(frequency, startTime, duration, volume) {
+  if (!audioContext || !musicMaster) return;
+
+  const osc = audioContext.createOscillator();
+  const gain = audioContext.createGain();
+
+  // Beberapa harmonik memberi suara lembut menyerupai piano.
+  osc.type = "triangle";
+  osc.frequency.setValueAtTime(frequency, startTime);
+
+  gain.gain.setValueAtTime(0.0001, startTime);
+  gain.gain.exponentialRampToValueAtTime(
+    volume, startTime + 0.025
+  );
+  gain.gain.exponentialRampToValueAtTime(
+    0.0001, startTime + duration
+  );
+
+  osc.connect(gain);
+  gain.connect(musicMaster);
+
+  osc.start(startTime);
+  osc.stop(startTime + duration + 0.04);
+}
+
+function mainkanFrasa() {
+  if (!musicPlaying || !audioContext) return;
+
+  const now = audioContext.currentTime;
+  const chord = melody[melodyStep % melody.length];
+
+  // Nada melodi.
+  bunyikanNada(chord[0] * 2, now, 1.2, 0.075);
+  bunyikanNada(chord[1] * 2, now + 0.42, 1.1, 0.05);
+  bunyikanNada(chord[2] * 2, now + 0.82, 1.35, 0.04);
+
+  // Nada dasar yang lebih rendah.
+  bunyikanNada(chord[0] / 2, now, 1.8, 0.035);
+
+  melodyStep++;
+}
+
+async function toggleMusic() {
+  const label = document.getElementById("musicLabel");
+  const note = document.getElementById("musicNote");
+
+  if (!musicPlaying) {
+    try {
+      if (!audioContext) {
+        const AudioContextClass =
+          window.AudioContext || window.webkitAudioContext;
+
+        if (!AudioContextClass) {
+          label.textContent = "Musik tidak tersedia";
+          return;
+        }
+
+        audioContext = new AudioContextClass();
+        musicMaster = audioContext.createGain();
+        musicMaster.gain.value = 0.55;
+        musicMaster.connect(audioContext.destination);
+      }
+
+      await audioContext.resume();
+
+      musicPlaying = true;
+      mainkanFrasa();
+
+      musicTimer = setInterval(mainkanFrasa, 1900);
+
+      label.textContent = "Jeda Musik";
+      note.textContent = "♫";
+    } catch (error) {
+      label.textContent = "Coba Putar Lagi";
+    }
+  } else {
+    musicPlaying = false;
+    clearInterval(musicTimer);
+
+    if (audioContext && audioContext.state === "running") {
+      await audioContext.suspend();
+    }
+
+    label.textContent = "Putar Musik";
+    note.textContent = "♪";
+  }
+}
+
+/* Tombol spasi untuk melompat di tahap sepeda. */
+
+document.addEventListener("keydown", event => {
+  if (event.code !== "Space") return;
+
+  const bikeStage = document.getElementById("bikeStage");
+
   if (
-    event.code === "Space" &&
-    document.getElementById("bikeStage").style.display === "block"
+    !bikeStage.classList.contains("hidden") &&
+    bikeRunning &&
+    !event.repeat
   ) {
     event.preventDefault();
-
-    if (!event.repeat) {
-      lompat();
-    }
+    lompat();
   }
+});
+
+/* Bersihkan timer jika halaman ditutup. */
+
+window.addEventListener("pagehide", () => {
+  clearInterval(flowerTimer);
+  clearInterval(countdownTimer);
+  clearInterval(bikeTimer);
+  clearInterval(obstacleSpawnTimer);
+  clearInterval(musicTimer);
+  clearInterval(particleTimer);
 });
 </script>
 
