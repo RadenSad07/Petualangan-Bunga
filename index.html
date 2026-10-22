@@ -37,9 +37,7 @@ button {
 }
 
 button:hover { transform: translateY(-2px); }
-
 button:active { transform: scale(.97); }
-
 .hidden { display: none !important; }
 
 h1 {
@@ -104,7 +102,6 @@ p { line-height: 1.7; }
 .flower {
   position: absolute;
   z-index: 2;
-  border: 0;
   background: transparent;
   font-size: 34px;
   padding: 0;
@@ -157,7 +154,7 @@ p { line-height: 1.7; }
   50% { transform: translateY(-12px); }
 }
 
-/* Tantangan sepeda */
+/* TAHAP SEPEDA */
 
 #bikeStage {
   min-height: 100vh;
@@ -168,7 +165,7 @@ p { line-height: 1.7; }
 #track {
   position: relative;
   width: min(100%, 800px);
-  height: 230px;
+  height: 260px;
   overflow: hidden;
   margin: 25px auto 16px;
   border: 2px solid #ed9cbe;
@@ -184,6 +181,7 @@ p { line-height: 1.7; }
   right: 0;
   bottom: 51px;
   border-bottom: 3px dashed #d681a5;
+  pointer-events: none;
 }
 
 #bike {
@@ -192,16 +190,28 @@ p { line-height: 1.7; }
   left: 7%;
   bottom: 48px;
   font-size: 46px;
+  line-height: 1;
 }
 
+/* LOMPATAN LEBIH TINGGI */
+
 #bike.jumping {
-  animation: jump .65s ease-out;
+  animation: jump .85s cubic-bezier(.25,.7,.35,1);
 }
 
 @keyframes jump {
-  0% { transform: translateY(0) rotate(0); }
-  45% { transform: translateY(-100px) rotate(-12deg); }
-  100% { transform: translateY(0) rotate(0); }
+  0% {
+    transform: translateY(0) rotate(0);
+  }
+  40% {
+    transform: translateY(-155px) rotate(-12deg);
+  }
+  65% {
+    transform: translateY(-145px) rotate(5deg);
+  }
+  100% {
+    transform: translateY(0) rotate(0);
+  }
 }
 
 .obstacle {
@@ -210,6 +220,8 @@ p { line-height: 1.7; }
   bottom: 46px;
   font-size: 35px;
   line-height: 1;
+  width: 42px;
+  text-align: center;
 }
 
 #finishFlag {
@@ -243,7 +255,7 @@ p { line-height: 1.7; }
   font-size: .94rem;
 }
 
-/* Layar hadiah romantis */
+/* HADIAH ROMANTIS */
 
 #romanticReveal {
   position: relative;
@@ -438,7 +450,7 @@ p { line-height: 1.7; }
   60% { transform: scale(1.12); }
 }
 
-/* Kelopak dan hati */
+/* KELopak DAN HATI MELAYANG */
 
 .particle {
   position: fixed;
@@ -451,12 +463,18 @@ p { line-height: 1.7; }
 }
 
 @keyframes fall {
-  0% { transform: translate3d(0, -5vh, 0) rotate(0); opacity: 0; }
+  0% {
+    transform: translate3d(0, -5vh, 0) rotate(0);
+    opacity: 0;
+  }
   10% { opacity: .95; }
-  100% { transform: translate3d(var(--drift), 110vh, 0) rotate(600deg); opacity: 0; }
+  100% {
+    transform: translate3d(var(--drift), 110vh, 0) rotate(600deg);
+    opacity: 0;
+  }
 }
 
-/* Kontrol musik */
+/* KONTROL MUSIK */
 
 .music-control {
   position: fixed;
@@ -477,13 +495,11 @@ p { line-height: 1.7; }
   backdrop-filter: blur(8px);
 }
 
-#musicNote {
-  font-size: 1.2rem;
-}
+#musicNote { font-size: 1.2rem; }
 
 @media (max-width: 480px) {
   #game { height: 340px; }
-  #track { height: 210px; }
+  #track { height: 230px; }
   .love-letter { border-radius: 18px; }
   .music-control { right: 10px; bottom: 10px; }
 }
@@ -570,7 +586,6 @@ p { line-height: 1.7; }
 
     <div class="love-letter">
       <p class="letter-to">Hallo Istriku IIS SYARIFAH!! 💗</p>
-
       <div class="letter-message" id="loveMessage"></div>
 
       <div class="signature">
@@ -584,9 +599,7 @@ p { line-height: 1.7; }
       Terima kasih telah menjadi rumah terindah bagi hatiku. 🌹
     </p>
 
-    <button class="primary-btn" onclick="mainLagi()">
-      💗 Main Lagi
-    </button>
+    <button class="primary-btn" onclick="mainLagi()">💗 Main Lagi</button>
   </div>
 </section>
 
@@ -596,9 +609,7 @@ p { line-height: 1.7; }
 </button>
 
 <script>
-/* ==================================
-   PENGATURAN UMUM
-================================== */
+/* PENGATURAN UMUM */
 
 const TOTAL_BUNGA = 10;
 const DURASI_GAME = 45;
@@ -616,15 +627,14 @@ let bikeRunning = false;
 let jumping = false;
 let jumpTimeout = null;
 let obstacleSpawnTimer = null;
+let initialObstacleTimer = null;
 let obstacles = [];
 let nextObstacleId = 0;
 
 let particleTimer = null;
 let particlesRunning = false;
 
-/* ==================================
-   TAHAP BUNGA
-================================== */
+/* TAHAP BUNGA */
 
 function mulaiGame() {
   clearInterval(flowerTimer);
@@ -652,9 +662,7 @@ function mulaiGame() {
   for (let i = 0; i < 3; i++) buatBunga();
 
   flowerTimer = setInterval(() => {
-    if (!flowerRunning) return;
-
-    buatBunga();
+    if (flowerRunning) buatBunga();
   }, 850);
 
   countdownTimer = setInterval(() => {
@@ -686,13 +694,11 @@ function buatBunga() {
   flower.className = "flower";
   flower.textContent =
     flowerTypes[Math.floor(Math.random() * flowerTypes.length)];
-
   flower.setAttribute("aria-label", "Tangkap bunga");
 
   const maxLeft = Math.max(0, game.clientWidth - 45);
   flower.style.left = Math.random() * maxLeft + "px";
   flower.style.top = "-45px";
-
   game.appendChild(flower);
 
   let y = -45;
@@ -723,9 +729,7 @@ function buatBunga() {
     score++;
     document.getElementById("score").textContent = score;
 
-    if (score >= TOTAL_BUNGA) {
-      menangBunga();
-    }
+    if (score >= TOTAL_BUNGA) menangBunga();
   });
 }
 
@@ -750,13 +754,12 @@ function bukaPeti() {
   mulaiSepeda();
 }
 
-/* ==================================
-   TAHAP SEPEDA
-================================== */
+/* TAHAP SEPEDA */
 
 function mulaiSepeda() {
   clearInterval(bikeTimer);
   clearInterval(obstacleSpawnTimer);
+  clearTimeout(initialObstacleTimer);
   clearTimeout(jumpTimeout);
 
   bikeRunning = true;
@@ -767,31 +770,34 @@ function mulaiSepeda() {
   obstacles = [];
 
   const track = document.getElementById("track");
-
   track.querySelectorAll(".obstacle").forEach(el => el.remove());
 
-  document.getElementById("bike").classList.remove("jumping");
-  document.getElementById("bike").style.bottom = "48px";
+  const bike = document.getElementById("bike");
+  bike.classList.remove("jumping");
+
   document.getElementById("lives").textContent = lives;
   document.getElementById("distance").textContent = distance;
   document.getElementById("bikeHint").textContent =
-    "Hindari rintangan dan capai garis finis!";
+    "Rintangan datang lebih renggang. Lompat untuk melewatinya!";
   document.getElementById("jumpButton").textContent = "⬆ LOMPAT!";
+  document.getElementById("jumpButton").onclick = lompat;
 
-  obstacleSpawnTimer = setTimeout(() => {
+  /*
+    Rintangan pertama muncul setelah 2 detik.
+    Rintangan berikutnya muncul setiap 2,2 detik.
+  */
+  initialObstacleTimer = setTimeout(() => {
     if (bikeRunning) buatRintangan();
-  }, 1200);
+  }, 2000);
 
   obstacleSpawnTimer = setInterval(() => {
-    if (!bikeRunning) return;
-    buatRintangan();
-  }, 1450);
+    if (bikeRunning) buatRintangan();
+  }, 2200);
 
   bikeTimer = setInterval(() => {
     if (!bikeRunning) return;
 
     distance += 0.25;
-
     if (distance > 100) distance = 100;
 
     document.getElementById("distance").textContent =
@@ -799,9 +805,7 @@ function mulaiSepeda() {
 
     gerakkanRintangan();
 
-    if (distance >= 100) {
-      menangSepeda();
-    }
+    if (distance >= 100 && bikeRunning) menangSepeda();
   }, 30);
 }
 
@@ -824,14 +828,14 @@ function buatRintangan() {
 function gerakkanRintangan() {
   const bike = document.getElementById("bike");
   const bikeRect = bike.getBoundingClientRect();
-  const track = document.getElementById("track");
-  const trackRect = track.getBoundingClientRect();
 
   obstacles = obstacles.filter(obstacle => {
     if (!obstacle.isConnected) return false;
 
     let x = parseFloat(obstacle.style.left);
-    x -= 5.5;
+
+    /* Kecepatan rintangan diperlambat. */
+    x -= 4;
     obstacle.style.left = x + "px";
 
     if (x < -60) {
@@ -841,21 +845,25 @@ function gerakkanRintangan() {
 
     const rect = obstacle.getBoundingClientRect();
 
-    const collision =
-      rect.left < bikeRect.right - 12 &&
-      rect.right > bikeRect.left + 12 &&
-      rect.top < bikeRect.bottom - 8 &&
-      rect.bottom > bikeRect.top + 8;
+    /*
+      Toleransi tabrakan dibuat lebih kecil agar
+      sepeda lebih mudah melewati rintangan saat melompat.
+    */
+    const horizontalCollision =
+      rect.left < bikeRect.right - 16 &&
+      rect.right > bikeRect.left + 16;
 
-    if (collision) {
+    const verticalCollision =
+      rect.top < bikeRect.bottom - 12 &&
+      rect.bottom > bikeRect.top + 12;
+
+    if (horizontalCollision && verticalCollision) {
       obstacle.remove();
 
       lives--;
       document.getElementById("lives").textContent = lives;
 
-      if (lives <= 0) {
-        gagalSepeda();
-      }
+      if (lives <= 0) gagalSepeda();
 
       return false;
     }
@@ -872,14 +880,18 @@ function lompat() {
   const bike = document.getElementById("bike");
   bike.classList.remove("jumping");
 
-  // Memulai ulang animasi lompat.
+  /* Memulai animasi lompatan dari awal. */
   void bike.offsetWidth;
   bike.classList.add("jumping");
 
+  /*
+    Durasi lompatan 850 ms agar sesuai dengan
+    animasi CSS yang lebih tinggi.
+  */
   jumpTimeout = setTimeout(() => {
     bike.classList.remove("jumping");
     jumping = false;
-  }, 650);
+  }, 850);
 }
 
 function gagalSepeda() {
@@ -887,10 +899,11 @@ function gagalSepeda() {
 
   clearInterval(bikeTimer);
   clearInterval(obstacleSpawnTimer);
+  clearTimeout(initialObstacleTimer);
   clearTimeout(jumpTimeout);
 
   document.getElementById("bikeHint").textContent =
-    "Yah, belum berhasil! Coba lagi, kamu pasti bisa 💗";
+    "Belum berhasil? Tidak apa-apa! Coba lagi tanpa mengulang permainan bunga 💗";
 
   document.getElementById("jumpButton").textContent = "🔄 COBA LAGI";
   document.getElementById("jumpButton").onclick = mulaiSepeda;
@@ -901,12 +914,12 @@ function menangSepeda() {
 
   clearInterval(bikeTimer);
   clearInterval(obstacleSpawnTimer);
+  clearTimeout(initialObstacleTimer);
   clearTimeout(jumpTimeout);
 
   document.getElementById("bikeStage").classList.add("hidden");
   document.getElementById("romanticReveal").classList.remove("hidden");
 
-  // Pesan ditampilkan perlahan untuk efek surat cinta.
   document.getElementById("loveMessage").textContent =
     "Kamu hebat! 💖\n\n" +
     "Terima kasih sudah menjadi istri dan ibu yang baik.\n\n" +
@@ -935,9 +948,7 @@ function mainLagi() {
   mulaiGame();
 }
 
-/* ==================================
-   ANIMASI KELopak DAN HATI
-================================== */
+/* ANIMASI KELopak DAN HATI */
 
 function startParticles(mode) {
   stopParticles();
@@ -964,7 +975,6 @@ function startParticles(mode) {
     );
 
     document.body.appendChild(particle);
-
     setTimeout(() => particle.remove(), 12000);
   }, mode === "romantic" ? 230 : 450);
 }
@@ -976,10 +986,7 @@ function stopParticles() {
   document.querySelectorAll(".particle").forEach(p => p.remove());
 }
 
-/* ==================================
-   MUSIK PIANO LEMBUT
-   Musik hanya aktif setelah tombol ditekan.
-================================== */
+/* MUSIK LEMBUT */
 
 let audioContext = null;
 let musicMaster = null;
@@ -1004,7 +1011,6 @@ function bunyikanNada(frequency, startTime, duration, volume) {
   const osc = audioContext.createOscillator();
   const gain = audioContext.createGain();
 
-  // Beberapa harmonik memberi suara lembut menyerupai piano.
   osc.type = "triangle";
   osc.frequency.setValueAtTime(frequency, startTime);
 
@@ -1029,12 +1035,9 @@ function mainkanFrasa() {
   const now = audioContext.currentTime;
   const chord = melody[melodyStep % melody.length];
 
-  // Nada melodi.
   bunyikanNada(chord[0] * 2, now, 1.2, 0.075);
   bunyikanNada(chord[1] * 2, now + 0.42, 1.1, 0.05);
   bunyikanNada(chord[2] * 2, now + 0.82, 1.35, 0.04);
-
-  // Nada dasar yang lebih rendah.
   bunyikanNada(chord[0] / 2, now, 1.8, 0.035);
 
   melodyStep++;
@@ -1065,7 +1068,6 @@ async function toggleMusic() {
 
       musicPlaying = true;
       mainkanFrasa();
-
       musicTimer = setInterval(mainkanFrasa, 1900);
 
       label.textContent = "Jeda Musik";
@@ -1086,7 +1088,7 @@ async function toggleMusic() {
   }
 }
 
-/* Tombol spasi untuk melompat di tahap sepeda. */
+/* SPASI UNTUK MELOMPAT */
 
 document.addEventListener("keydown", event => {
   if (event.code !== "Space") return;
@@ -1103,13 +1105,15 @@ document.addEventListener("keydown", event => {
   }
 });
 
-/* Bersihkan timer jika halaman ditutup. */
+/* BERSIHKAN TIMER SAAT HALAMAN DITUTUP */
 
 window.addEventListener("pagehide", () => {
   clearInterval(flowerTimer);
   clearInterval(countdownTimer);
   clearInterval(bikeTimer);
   clearInterval(obstacleSpawnTimer);
+  clearTimeout(initialObstacleTimer);
+  clearTimeout(jumpTimeout);
   clearInterval(musicTimer);
   clearInterval(particleTimer);
 });
