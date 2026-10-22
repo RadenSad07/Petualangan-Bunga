@@ -9,14 +9,10 @@
 <style>
 :root {
   --pink: #ff75ad;
-  --pink-light: #fff0f6;
-  --pink-dark: #b82f70;
-  --gold: #ffe5a3;
-  --wine: #6c2148;
+  --light: #fff0f6;
+  --dark: #b82f70;
 }
-
 * { box-sizing: border-box; }
-
 body {
   margin: 0;
   min-height: 100vh;
@@ -24,39 +20,25 @@ body {
   font-family: Georgia, "Times New Roman", serif;
   color: #773452;
   text-align: center;
-  background:
-    radial-gradient(ellipse at top, #fffafd 0%, transparent 65%),
+  background: radial-gradient(ellipse at top, #fffafd, transparent 65%),
     linear-gradient(145deg, #ffeaf3, #ffd1e4 48%, #fff1f7);
 }
-
 button {
   font: inherit;
   cursor: pointer;
   border: none;
   transition: transform .2s, box-shadow .2s;
 }
-
 button:hover { transform: translateY(-2px); }
 button:active { transform: scale(.97); }
 .hidden { display: none !important; }
-
-h1 {
-  color: #c13d7b;
-  text-shadow: 0 3px 12px #fff;
-}
-
+h1 { color: #c13d7b; text-shadow: 0 3px 12px #fff; }
 p { line-height: 1.7; }
-
-#flowerScreen {
+#flowerScreen, #bikeStage, #chestScreen {
   min-height: 100vh;
   padding: 28px 16px;
 }
-
-.subtitle {
-  color: #a64c75;
-  font-size: 1.05rem;
-}
-
+.subtitle { color: #a64c75; font-size: 1.05rem; }
 .score-panel {
   display: flex;
   justify-content: center;
@@ -64,16 +46,14 @@ p { line-height: 1.7; }
   gap: 12px;
   margin: 18px auto;
 }
-
 .pill {
-  background: #ffffffc9;
+  background: #ffffffd9;
   border: 1px solid #ffb6d1;
   border-radius: 30px;
   padding: 10px 20px;
   box-shadow: 0 5px 18px #dc6f9b20;
   font-weight: bold;
 }
-
 #game {
   position: relative;
   width: min(100%, 760px);
@@ -82,23 +62,18 @@ p { line-height: 1.7; }
   overflow: hidden;
   border: 2px solid #ffbad4;
   border-radius: 26px;
-  background:
-    radial-gradient(circle at 50% 20%, #fff 0%, transparent 55%),
-    linear-gradient(#ffe6f1, #ffd1e4 70%, #f6bad3);
-  box-shadow: 0 15px 45px #b82f7020, inset 0 0 25px #fff9;
+  background: linear-gradient(#ffe6f1, #ffd1e4 70%, #f6bad3);
+  box-shadow: 0 15px 45px #b82f7020;
 }
-
 #game::after {
-  content: "🌷       🌸        🌷       🌼";
+  content: "🌷　🌸　🌷　🌼";
   position: absolute;
   bottom: 8px;
   left: 0;
   right: 0;
   font-size: 25px;
-  opacity: .8;
   pointer-events: none;
 }
-
 .flower {
   position: absolute;
   z-index: 2;
@@ -106,26 +81,17 @@ p { line-height: 1.7; }
   font-size: 34px;
   padding: 0;
   line-height: 1;
-  filter: drop-shadow(0 4px 4px #a64c7530);
-  animation: flowerSpin 3s linear infinite;
+  animation: sway 1.5s infinite alternate;
 }
-
-@keyframes flowerSpin {
-  0% { rotate: -12deg; }
-  50% { rotate: 12deg; }
-  100% { rotate: -12deg; }
-}
-
+@keyframes sway { to { rotate: 15deg; } }
 .primary-btn {
   padding: 13px 25px;
   border-radius: 30px;
   color: white;
   font-weight: bold;
-  letter-spacing: .4px;
   background: linear-gradient(135deg, #ff8cbb, #d84787);
   box-shadow: 0 7px 20px #cf4b872e;
 }
-
 .secondary-btn {
   padding: 12px 22px;
   border-radius: 28px;
@@ -133,35 +99,21 @@ p { line-height: 1.7; }
   background: #fff;
   border: 1px solid #ffc2d9;
 }
-
+.hint { color: #96506f; font-size: .94rem; }
 #chestScreen {
-  min-height: 100vh;
-  padding: 50px 20px;
-  background: radial-gradient(ellipse, #fff 0%, #ffe3ef 55%, #ffc8df 100%);
+  background: radial-gradient(ellipse, #fff, #ffe3ef 55%, #ffc8df);
 }
-
 .chest {
   display: block;
   margin: 25px auto;
   font-size: clamp(90px, 18vw, 150px);
   background: transparent;
-  filter: drop-shadow(0 12px 16px #ba417b40);
-  animation: chestFloat 2s ease-in-out infinite;
+  animation: float 2s ease-in-out infinite;
 }
-
-@keyframes chestFloat {
-  0%, 100% { transform: translateY(0); }
+@keyframes float {
   50% { transform: translateY(-12px); }
 }
-
-/* TAHAP SEPEDA */
-
-#bikeStage {
-  min-height: 100vh;
-  padding: 24px 15px;
-  background: linear-gradient(#fff0f7, #ffd3e6);
-}
-
+#bikeStage { background: linear-gradient(#fff0f7, #ffd3e6); }
 #track {
   position: relative;
   width: min(100%, 800px);
@@ -171,9 +123,7 @@ p { line-height: 1.7; }
   border: 2px solid #ed9cbe;
   border-radius: 24px;
   background: linear-gradient(#fff5fa 0%, #ffe4f0 72%, #f4b9d2 72%);
-  box-shadow: 0 10px 35px #b82f7020;
 }
-
 #track::after {
   content: "";
   position: absolute;
@@ -181,157 +131,66 @@ p { line-height: 1.7; }
   right: 0;
   bottom: 51px;
   border-bottom: 3px dashed #d681a5;
-  pointer-events: none;
 }
-
 #bike {
   position: absolute;
   z-index: 3;
   left: 7%;
   bottom: 48px;
   font-size: 46px;
-  line-height: 1;
 }
-
-/* LOMPATAN LEBIH TINGGI */
-
-#bike.jumping {
-  animation: jump .85s cubic-bezier(.25,.7,.35,1);
-}
-
+#bike.jumping { animation: jump .85s cubic-bezier(.25,.7,.35,1); }
 @keyframes jump {
-  0% {
-    transform: translateY(0) rotate(0);
-  }
-  40% {
-    transform: translateY(-155px) rotate(-12deg);
-  }
-  65% {
-    transform: translateY(-145px) rotate(5deg);
-  }
-  100% {
-    transform: translateY(0) rotate(0);
-  }
+  0%,100% { transform: translateY(0); }
+  40% { transform: translateY(-155px) rotate(-12deg); }
+  65% { transform: translateY(-145px) rotate(5deg); }
 }
-
 .obstacle {
   position: absolute;
   z-index: 3;
   bottom: 46px;
   font-size: 35px;
   line-height: 1;
-  width: 42px;
-  text-align: center;
 }
-
-#finishFlag {
-  position: absolute;
-  right: 12px;
-  bottom: 48px;
-  font-size: 34px;
-}
-
-.bike-controls {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin: 18px 0;
-}
-
+#finishFlag { position: absolute; right: 12px; bottom: 48px; font-size: 34px; }
+.bike-controls { display: flex; justify-content: center; gap: 12px; margin: 18px 0; }
 #jumpButton {
   min-width: 180px;
   padding: 16px 28px;
   border-radius: 30px;
-  color: #fff;
+  color: white;
   font-weight: bold;
   font-size: 1.05rem;
   background: linear-gradient(135deg, #ff8cbb, #bd3675);
-  box-shadow: 0 7px 20px #bd367530;
 }
-
-.hint {
-  color: #96506f;
-  font-size: .94rem;
-}
-
-/* HADIAH ROMANTIS */
-
 #romanticReveal {
   position: relative;
   min-height: 100vh;
   overflow: hidden;
   padding: 32px 15px 55px;
   color: #fff9fd;
-  background:
-    radial-gradient(ellipse at 50% 38%, #b9467d 0%, transparent 55%),
+  background: radial-gradient(ellipse at 50% 38%, #b9467d, transparent 55%),
     linear-gradient(160deg, #9f315f, #6b204b 60%, #43162f);
-  isolation: isolate;
 }
-
-#romanticReveal::before,
-#romanticReveal::after {
-  content: "";
-  position: absolute;
-  width: 330px;
-  height: 330px;
-  border-radius: 50%;
-  background: #ffacd44d;
-  filter: blur(75px);
-  z-index: -1;
-  animation: glow 5s ease-in-out infinite alternate;
-}
-
-#romanticReveal::before {
-  top: 5%;
-  left: -150px;
-}
-
-#romanticReveal::after {
-  right: -150px;
-  bottom: 4%;
-  animation-delay: 1.5s;
-}
-
-@keyframes glow {
-  from { opacity: .3; transform: scale(.8); }
-  to { opacity: .9; transform: scale(1.25); }
-}
-
-.reveal-inner {
-  width: min(100%, 650px);
-  margin: 0 auto;
-  animation: cinematicIn 1.8s cubic-bezier(.2,.8,.2,1) both;
-}
-
-@keyframes cinematicIn {
-  from { opacity: 0; transform: translateY(35px) scale(.96); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
+.reveal-inner { width: min(100%, 650px); margin: 0 auto; }
 .eyebrow {
   color: #ffe4b2;
-  letter-spacing: 4px;
+  letter-spacing: 3px;
   text-transform: uppercase;
   font-family: Arial, sans-serif;
   font-size: .72rem;
 }
-
 .romantic-title {
   margin: 14px 0;
   color: #fff4fa;
   font-size: clamp(2rem, 8vw, 3.6rem);
-  line-height: 1.15;
-  text-shadow: 0 0 30px #ffc1df70;
 }
-
 .gold-line {
   width: 110px;
   height: 2px;
   margin: 20px auto;
   background: linear-gradient(90deg, transparent, #ffe5a3, transparent);
 }
-
 .gift-scene {
   position: relative;
   margin: 18px auto 12px;
@@ -339,40 +198,20 @@ p { line-height: 1.7; }
   display: grid;
   place-items: center;
 }
-
 .gift-aura {
   position: absolute;
   width: 230px;
   height: 230px;
   border-radius: 50%;
-  background: radial-gradient(circle, #ffe6a54d, #ff9ac51c 50%, transparent 70%);
-  animation: auraPulse 3s ease-in-out infinite;
+  background: radial-gradient(circle, #ffe6a54d, transparent 70%);
+  animation: float 3s infinite;
 }
-
-@keyframes auraPulse {
-  0%, 100% { transform: scale(.9); opacity: .6; }
-  50% { transform: scale(1.18); opacity: 1; }
-}
-
 .teddy {
   position: relative;
   z-index: 1;
   font-size: clamp(100px, 26vw, 155px);
-  line-height: 1.4;
-  filter: drop-shadow(0 12px 18px #2a0d1c60);
-  animation: teddyAppear 1.2s .4s both, teddyFloat 3s 1.6s ease-in-out infinite;
+  animation: float 3s infinite;
 }
-
-@keyframes teddyAppear {
-  from { opacity: 0; transform: scale(.4) rotate(-15deg); }
-  to { opacity: 1; transform: scale(1) rotate(0); }
-}
-
-@keyframes teddyFloat {
-  0%, 100% { translate: 0 0; }
-  50% { translate: 0 -9px; }
-}
-
 .ribbon {
   position: absolute;
   z-index: 2;
@@ -380,16 +219,8 @@ p { line-height: 1.7; }
   right: calc(50% - 100px);
   font-size: 53px;
   transform: rotate(15deg);
-  filter: drop-shadow(0 5px 7px #270d1a50);
 }
-
-.gift-caption {
-  margin: 0;
-  color: #ffe5b2;
-  font-style: italic;
-  font-size: 1.1rem;
-}
-
+.gift-caption { color: #ffe5b2; font-style: italic; font-size: 1.1rem; }
 .love-letter {
   position: relative;
   margin: 28px auto;
@@ -398,89 +229,32 @@ p { line-height: 1.7; }
   border-radius: 24px;
   background: linear-gradient(145deg, #fff8fcf5, #ffe8f2f5);
   color: #813451;
-  box-shadow: 0 18px 60px #220b1d35, inset 0 0 25px #fff;
+  box-shadow: 0 18px 60px #220b1d35;
 }
-
-.love-letter::before {
-  content: "♥";
-  position: absolute;
-  top: -18px;
-  left: calc(50% - 19px);
-  width: 38px;
-  height: 38px;
-  display: grid;
-  place-items: center;
-  color: white;
-  background: linear-gradient(135deg, #ff9bc3, #ca3e7e);
-  border-radius: 50%;
-  box-shadow: 0 5px 14px #a52c6538;
-}
-
-.letter-to {
-  margin: 0 0 12px;
-  color: #b33972;
-  font-style: italic;
-  font-size: 1.15rem;
-}
-
-.letter-message {
-  white-space: pre-line;
-  font-size: 1.05rem;
-  line-height: 1.95;
-}
-
-.signature {
-  margin-top: 25px;
-  color: #a9366b;
-  font-style: italic;
-  font-size: 1.2rem;
-}
-
-.final-heart {
-  display: inline-block;
-  color: #ffb0d1;
-  font-size: 28px;
-  animation: heartBeat 1.2s infinite;
-}
-
-@keyframes heartBeat {
-  0%, 100% { transform: scale(1); }
-  20% { transform: scale(1.2); }
-  40% { transform: scale(1); }
-  60% { transform: scale(1.12); }
-}
-
-/* KELopak DAN HATI MELAYANG */
-
+.letter-to { color: #b33972; font-style: italic; font-size: 1.15rem; }
+.letter-message { white-space: pre-line; font-size: 1.05rem; line-height: 1.95; }
+.signature { margin-top: 25px; color: #a9366b; font-style: italic; font-size: 1.2rem; }
+.final-heart { color: #ffb0d1; font-size: 28px; animation: beat 1.2s infinite; }
+@keyframes beat { 50% { transform: scale(1.2); } }
 .particle {
   position: fixed;
   top: -40px;
   z-index: 10;
   pointer-events: none;
-  user-select: none;
   animation: fall linear forwards;
-  filter: drop-shadow(0 2px 4px #fff5);
 }
-
 @keyframes fall {
-  0% {
-    transform: translate3d(0, -5vh, 0) rotate(0);
-    opacity: 0;
-  }
+  0% { transform: translateY(-5vh) rotate(0); opacity: 0; }
   10% { opacity: .95; }
-  100% {
-    transform: translate3d(var(--drift), 110vh, 0) rotate(600deg);
-    opacity: 0;
-  }
+  100% { transform: translate(var(--drift), 110vh) rotate(600deg); opacity: 0; }
 }
 
-/* KONTROL MUSIK */
-
+/* TOMBOL MUSIK */
 .music-control {
   position: fixed;
   right: 14px;
   bottom: 14px;
-  z-index: 20;
+  z-index: 30;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -492,11 +266,26 @@ p { line-height: 1.7; }
   box-shadow: 0 5px 20px #76204520;
   font-size: .85rem;
   font-weight: bold;
-  backdrop-filter: blur(8px);
 }
-
-#musicNote { font-size: 1.2rem; }
-
+.music-panel {
+  width: min(340px, calc(100% - 24px));
+  margin: 20px auto;
+  padding: 14px;
+  border: 1px solid #ffc4da;
+  border-radius: 18px;
+  background: #fff8fc;
+  box-shadow: 0 8px 24px #76204518;
+}
+.music-panel p { margin: 5px 0 12px; }
+#youtubePlayer {
+  width: 100%;
+  min-height: 200px;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  border-radius: 12px;
+  background: #f8dce9;
+}
+.music-status { font-size: .85rem; color: #96506f; }
 @media (max-width: 480px) {
   #game { height: 340px; }
   #track { height: 230px; }
@@ -508,100 +297,79 @@ p { line-height: 1.7; }
 
 <body>
 
-<!-- TAHAP 1: MENANGKAP BUNGA -->
-
 <section id="flowerScreen">
   <h1>🌸 Petualangan Bunga 🌸</h1>
   <p class="subtitle">Tangkap bunga-bunganya dan temukan hadiah rahasia!</p>
-
   <div class="score-panel">
     <div class="pill">🌷 Bunga: <span id="score">0</span>/10</div>
     <div class="pill">⏰ Waktu: <span id="time">45</span> detik</div>
   </div>
-
   <div id="game" aria-label="Area permainan menangkap bunga"></div>
-
-  <button class="primary-btn" id="startButton" onclick="mulaiGame()">
-    🌸 Mulai Petualangan
-  </button>
+  <button class="primary-btn" id="startButton" onclick="mulaiGame()">🌸 Mulai Petualangan</button>
   <p class="hint" id="flowerHint">Klik bunga yang jatuh sebanyak 10 kali!</p>
 </section>
-
-<!-- PETI HADIAH -->
 
 <section id="chestScreen" class="hidden">
   <p class="eyebrow">Sebuah kejutan menantimu</p>
   <h1>🎀 Kamu Berhasil! 🎀</h1>
   <p>Semua bunga sudah terkumpul.<br>Namun, masih ada satu petualangan lagi...</p>
-
-  <button class="chest" onclick="bukaPeti()" aria-label="Buka peti hadiah">
-    🎁
-  </button>
-
-  <button class="primary-btn" onclick="bukaPeti()">
-    BUKA HADIAH ✨
-  </button>
+  <button class="chest" onclick="bukaPeti()" aria-label="Buka peti hadiah">🎁</button>
+  <button class="primary-btn" onclick="bukaPeti()">BUKA HADIAH ✨</button>
 </section>
-
-<!-- TAHAP 2: SEPEDA -->
 
 <section id="bikeStage" class="hidden">
   <h1>🚲 Perjalanan Menuju Cinta 💗</h1>
   <p>Lewati semua rintangan untuk menemukan kejutan istimewa!</p>
-
   <div class="score-panel">
     <div class="pill">❤️ Nyawa: <span id="lives">3</span></div>
     <div class="pill">✨ Jarak: <span id="distance">0</span>%</div>
   </div>
-
   <div id="track">
     <div id="bike">🚲</div>
     <div id="finishFlag">🏁</div>
   </div>
-
   <div class="bike-controls">
     <button id="jumpButton" onclick="lompat()">⬆ LOMPAT!</button>
   </div>
-
-  <p class="hint" id="bikeHint">
-    Tekan tombol LOMPAT atau spasi untuk menghindari rintangan.
-  </p>
+  <p class="hint" id="bikeHint">Tekan tombol LOMPAT atau spasi untuk menghindari rintangan.</p>
 </section>
-
-<!-- HADIAH ROMANTIS -->
 
 <section id="romanticReveal" class="hidden">
   <div class="reveal-inner">
     <p class="eyebrow">A little surprise, made with love</p>
     <h1 class="romantic-title">Untuk Istriku Tercinta</h1>
     <div class="gold-line"></div>
-
     <div class="gift-scene">
       <div class="gift-aura"></div>
       <div class="ribbon">🎀</div>
       <div class="teddy">🧸</div>
     </div>
-
     <p class="gift-caption">Hadiah kecil untuk seseorang yang begitu berarti...</p>
-
     <div class="love-letter">
       <p class="letter-to">Hallo Istriku IIS SYARIFAH!! 💗</p>
       <div class="letter-message" id="loveMessage"></div>
-
       <div class="signature">
         Dengan seluruh cinta yang aku punya,<br>
         untukmu, hari ini dan selamanya.
         <p class="final-heart">♥</p>
       </div>
     </div>
-
     <p style="color:#ffe4b2;font-style:italic">
       Terima kasih telah menjadi rumah terindah bagi hatiku. 🌹
     </p>
-
     <button class="primary-btn" onclick="mainLagi()">💗 Main Lagi</button>
   </div>
 </section>
+
+<!-- Pemutar lagu YouTube resmi -->
+<div class="music-panel">
+  <p><strong>🎵 Lagu untuk Istriku</strong></p>
+  <p>Bila Rasaku Ini Rasamu — Kerispatih</p>
+  <div id="youtubePlayer"></div>
+  <p class="music-status" id="musicStatus">
+    Tekan tombol Putar Musik untuk memulai lagu.
+  </p>
+</div>
 
 <button class="music-control" id="musicButton" onclick="toggleMusic()" aria-label="Putar atau jeda musik">
   <span id="musicNote">♫</span>
@@ -609,8 +377,6 @@ p { line-height: 1.7; }
 </button>
 
 <script>
-/* PENGATURAN UMUM */
-
 const TOTAL_BUNGA = 10;
 const DURASI_GAME = 45;
 
@@ -629,17 +395,14 @@ let jumpTimeout = null;
 let obstacleSpawnTimer = null;
 let initialObstacleTimer = null;
 let obstacles = [];
-let nextObstacleId = 0;
 
 let particleTimer = null;
 let particlesRunning = false;
 
-/* TAHAP BUNGA */
-
+/* PERMAINAN MENANGKAP BUNGA */
 function mulaiGame() {
   clearInterval(flowerTimer);
   clearInterval(countdownTimer);
-
   flowerRunning = true;
   score = 0;
   timeLeft = DURASI_GAME;
@@ -651,23 +414,19 @@ function mulaiGame() {
   document.getElementById("startButton").textContent =
     "🌸 Permainan Berlangsung...";
 
-  const game = document.getElementById("game");
-  game.innerHTML = "";
-
-  document.getElementById("chestScreen").classList.add("hidden");
-  document.getElementById("bikeStage").classList.add("hidden");
-  document.getElementById("romanticReveal").classList.add("hidden");
+  document.getElementById("game").innerHTML = "";
+  ["chestScreen", "bikeStage", "romanticReveal"].forEach(id =>
+    document.getElementById(id).classList.add("hidden")
+  );
   document.getElementById("flowerScreen").classList.remove("hidden");
 
   for (let i = 0; i < 3; i++) buatBunga();
-
   flowerTimer = setInterval(() => {
     if (flowerRunning) buatBunga();
   }, 850);
 
   countdownTimer = setInterval(() => {
     if (!flowerRunning) return;
-
     timeLeft--;
     document.getElementById("time").textContent = timeLeft;
 
@@ -675,45 +434,37 @@ function mulaiGame() {
       clearInterval(countdownTimer);
       clearInterval(flowerTimer);
       flowerRunning = false;
-
       document.getElementById("startButton").textContent = "Coba Lagi 🌸";
       document.getElementById("flowerHint").textContent =
         "Waktu habis! Tidak apa-apa, ayo coba lagi.";
+      document.getElementById("game").innerHTML = "";
     }
   }, 1000);
 }
 
 function buatBunga() {
   if (!flowerRunning || score >= TOTAL_BUNGA) return;
-
   const game = document.getElementById("game");
   const flower = document.createElement("button");
-  const flowerTypes = ["🌸", "🌷", "🌺", "🌼", "💮"];
-
+  const types = ["🌸", "🌷", "🌺", "🌼", "💮"];
   flower.type = "button";
   flower.className = "flower";
-  flower.textContent =
-    flowerTypes[Math.floor(Math.random() * flowerTypes.length)];
+  flower.textContent = types[Math.floor(Math.random() * types.length)];
   flower.setAttribute("aria-label", "Tangkap bunga");
-
-  const maxLeft = Math.max(0, game.clientWidth - 45);
-  flower.style.left = Math.random() * maxLeft + "px";
+  flower.style.left = Math.random() * Math.max(0, game.clientWidth - 45) + "px";
   flower.style.top = "-45px";
   game.appendChild(flower);
 
   let y = -45;
   const speed = 1.5 + Math.random() * 1.7;
-
   const fallTimer = setInterval(() => {
     if (!flowerRunning || !flower.isConnected) {
       clearInterval(fallTimer);
       flower.remove();
       return;
     }
-
     y += speed;
     flower.style.top = y + "px";
-
     if (y > game.clientHeight + 10) {
       clearInterval(fallTimer);
       flower.remove();
@@ -722,13 +473,10 @@ function buatBunga() {
 
   flower.addEventListener("click", () => {
     if (!flowerRunning) return;
-
     clearInterval(fallTimer);
     flower.remove();
-
     score++;
     document.getElementById("score").textContent = score;
-
     if (score >= TOTAL_BUNGA) menangBunga();
   });
 }
@@ -737,25 +485,20 @@ function menangBunga() {
   flowerRunning = false;
   clearInterval(flowerTimer);
   clearInterval(countdownTimer);
-
   document.getElementById("game").innerHTML = "";
   document.getElementById("flowerScreen").classList.add("hidden");
   document.getElementById("chestScreen").classList.remove("hidden");
-
   startParticles("flower");
 }
 
 function bukaPeti() {
   stopParticles();
-
   document.getElementById("chestScreen").classList.add("hidden");
   document.getElementById("bikeStage").classList.remove("hidden");
-
   mulaiSepeda();
 }
 
-/* TAHAP SEPEDA */
-
+/* PERMAINAN SEPEDA */
 function mulaiSepeda() {
   clearInterval(bikeTimer);
   clearInterval(obstacleSpawnTimer);
@@ -766,7 +509,6 @@ function mulaiSepeda() {
   jumping = false;
   lives = 3;
   distance = 0;
-  nextObstacleId = 0;
   obstacles = [];
 
   const track = document.getElementById("track");
@@ -774,18 +516,13 @@ function mulaiSepeda() {
 
   const bike = document.getElementById("bike");
   bike.classList.remove("jumping");
-
   document.getElementById("lives").textContent = lives;
   document.getElementById("distance").textContent = distance;
   document.getElementById("bikeHint").textContent =
-    "Rintangan datang lebih renggang. Lompat untuk melewatinya!";
+    "Lompat untuk menghindari rintangan!";
   document.getElementById("jumpButton").textContent = "⬆ LOMPAT!";
   document.getElementById("jumpButton").onclick = lompat;
 
-  /*
-    Rintangan pertama muncul setelah 2 detik.
-    Rintangan berikutnya muncul setiap 2,2 detik.
-  */
   initialObstacleTimer = setTimeout(() => {
     if (bikeRunning) buatRintangan();
   }, 2000);
@@ -796,31 +533,22 @@ function mulaiSepeda() {
 
   bikeTimer = setInterval(() => {
     if (!bikeRunning) return;
-
     distance += 0.25;
     if (distance > 100) distance = 100;
-
-    document.getElementById("distance").textContent =
-      Math.floor(distance);
-
+    document.getElementById("distance").textContent = Math.floor(distance);
     gerakkanRintangan();
-
     if (distance >= 100 && bikeRunning) menangSepeda();
   }, 30);
 }
 
 function buatRintangan() {
   if (!bikeRunning) return;
-
   const track = document.getElementById("track");
   const obstacle = document.createElement("div");
   const types = ["🪵", "🪨", "🌵"];
-
   obstacle.className = "obstacle";
   obstacle.textContent = types[Math.floor(Math.random() * types.length)];
   obstacle.style.left = track.clientWidth + 10 + "px";
-  obstacle.dataset.id = String(nextObstacleId++);
-
   track.appendChild(obstacle);
   obstacles.push(obstacle);
 }
@@ -831,10 +559,7 @@ function gerakkanRintangan() {
 
   obstacles = obstacles.filter(obstacle => {
     if (!obstacle.isConnected) return false;
-
     let x = parseFloat(obstacle.style.left);
-
-    /* Kecepatan rintangan diperlambat. */
     x -= 4;
     obstacle.style.left = x + "px";
 
@@ -844,82 +569,55 @@ function gerakkanRintangan() {
     }
 
     const rect = obstacle.getBoundingClientRect();
+    const horizontal =
+      rect.left < bikeRect.right - 16 && rect.right > bikeRect.left + 16;
+    const vertical =
+      rect.top < bikeRect.bottom - 12 && rect.bottom > bikeRect.top + 12;
 
-    /*
-      Toleransi tabrakan dibuat lebih kecil agar
-      sepeda lebih mudah melewati rintangan saat melompat.
-    */
-    const horizontalCollision =
-      rect.left < bikeRect.right - 16 &&
-      rect.right > bikeRect.left + 16;
-
-    const verticalCollision =
-      rect.top < bikeRect.bottom - 12 &&
-      rect.bottom > bikeRect.top + 12;
-
-    if (horizontalCollision && verticalCollision) {
+    if (horizontal && vertical) {
       obstacle.remove();
-
       lives--;
       document.getElementById("lives").textContent = lives;
-
       if (lives <= 0) gagalSepeda();
-
       return false;
     }
-
     return true;
   });
 }
 
 function lompat() {
   if (!bikeRunning || jumping) return;
-
   jumping = true;
-
   const bike = document.getElementById("bike");
   bike.classList.remove("jumping");
-
-  /* Memulai animasi lompatan dari awal. */
   void bike.offsetWidth;
   bike.classList.add("jumping");
-
-  /*
-    Durasi lompatan 850 ms agar sesuai dengan
-    animasi CSS yang lebih tinggi.
-  */
   jumpTimeout = setTimeout(() => {
     bike.classList.remove("jumping");
     jumping = false;
   }, 850);
 }
 
-function gagalSepeda() {
+function hentikanSepeda() {
   bikeRunning = false;
-
   clearInterval(bikeTimer);
   clearInterval(obstacleSpawnTimer);
   clearTimeout(initialObstacleTimer);
   clearTimeout(jumpTimeout);
+}
 
+function gagalSepeda() {
+  hentikanSepeda();
   document.getElementById("bikeHint").textContent =
-    "Belum berhasil? Tidak apa-apa! Coba lagi tanpa mengulang permainan bunga 💗";
-
+    "Belum berhasil? Coba lagi tanpa mengulang permainan bunga 💗";
   document.getElementById("jumpButton").textContent = "🔄 COBA LAGI";
   document.getElementById("jumpButton").onclick = mulaiSepeda;
 }
 
 function menangSepeda() {
-  bikeRunning = false;
-
-  clearInterval(bikeTimer);
-  clearInterval(obstacleSpawnTimer);
-  clearTimeout(initialObstacleTimer);
-  clearTimeout(jumpTimeout);
-
+  hentikanSepeda();
   document.getElementById("bikeStage").classList.add("hidden");
   document.getElementById("romanticReveal").classList.remove("hidden");
-
   document.getElementById("loveMessage").textContent =
     "Kamu hebat! 💖\n\n" +
     "Terima kasih sudah menjadi istri dan ibu yang baik.\n\n" +
@@ -930,50 +628,36 @@ function menangSepeda() {
     "dalam setiap perjalanan hidup.\n\n" +
     "Aku mungkin tidak selalu sempurna, tetapi cintaku untukmu " +
     "akan selalu aku jaga.";
-
   startParticles("romantic");
 }
 
 function mainLagi() {
   stopParticles();
-
   document.getElementById("romanticReveal").classList.add("hidden");
   document.getElementById("chestScreen").classList.add("hidden");
   document.getElementById("bikeStage").classList.add("hidden");
   document.getElementById("flowerScreen").classList.remove("hidden");
-
-  document.getElementById("startButton").textContent =
-    "🌸 Mulai Petualangan";
-
+  document.getElementById("startButton").textContent = "🌸 Mulai Petualangan";
   mulaiGame();
 }
 
-/* ANIMASI KELopak DAN HATI */
-
+/* KELopak DAN HATI MELAYANG */
 function startParticles(mode) {
   stopParticles();
   particlesRunning = true;
-
   const symbols = mode === "romantic"
     ? ["🌸", "🌹", "💗", "💕", "✨", "💖"]
     : ["🌸", "🌷", "✨", "💮"];
 
   particleTimer = setInterval(() => {
     if (!particlesRunning) return;
-
     const particle = document.createElement("span");
     particle.className = "particle";
-    particle.textContent =
-      symbols[Math.floor(Math.random() * symbols.length)];
-
+    particle.textContent = symbols[Math.floor(Math.random() * symbols.length)];
     particle.style.left = Math.random() * 100 + "vw";
     particle.style.fontSize = (12 + Math.random() * 19) + "px";
     particle.style.animationDuration = (5 + Math.random() * 6) + "s";
-    particle.style.setProperty(
-      "--drift",
-      (Math.random() * 180 - 90) + "px"
-    );
-
+    particle.style.setProperty("--drift", (Math.random() * 180 - 90) + "px");
     document.body.appendChild(particle);
     setTimeout(() => particle.remove(), 12000);
   }, mode === "romantic" ? 230 : 450);
@@ -982,131 +666,105 @@ function startParticles(mode) {
 function stopParticles() {
   particlesRunning = false;
   clearInterval(particleTimer);
-
   document.querySelectorAll(".particle").forEach(p => p.remove());
 }
 
-/* MUSIK LEMBUT */
-
-let audioContext = null;
-let musicMaster = null;
-let musicTimer = null;
+/* MUSIK YOUTUBE */
+let youtubePlayer = null;
+let youtubeReady = false;
 let musicPlaying = false;
-let melodyStep = 0;
+let playerRequested = false;
 
-const melody = [
-  [523.25, 659.25, 783.99],
-  [493.88, 587.33, 739.99],
-  [440.00, 523.25, 659.25],
-  [392.00, 493.88, 587.33],
-  [440.00, 523.25, 659.25],
-  [392.00, 493.88, 587.33],
-  [349.23, 440.00, 523.25],
-  [392.00, 493.88, 587.33]
-];
-
-function bunyikanNada(frequency, startTime, duration, volume) {
-  if (!audioContext || !musicMaster) return;
-
-  const osc = audioContext.createOscillator();
-  const gain = audioContext.createGain();
-
-  osc.type = "triangle";
-  osc.frequency.setValueAtTime(frequency, startTime);
-
-  gain.gain.setValueAtTime(0.0001, startTime);
-  gain.gain.exponentialRampToValueAtTime(
-    volume, startTime + 0.025
-  );
-  gain.gain.exponentialRampToValueAtTime(
-    0.0001, startTime + duration
-  );
-
-  osc.connect(gain);
-  gain.connect(musicMaster);
-
-  osc.start(startTime);
-  osc.stop(startTime + duration + 0.04);
-}
-
-function mainkanFrasa() {
-  if (!musicPlaying || !audioContext) return;
-
-  const now = audioContext.currentTime;
-  const chord = melody[melodyStep % melody.length];
-
-  bunyikanNada(chord[0] * 2, now, 1.2, 0.075);
-  bunyikanNada(chord[1] * 2, now + 0.42, 1.1, 0.05);
-  bunyikanNada(chord[2] * 2, now + 0.82, 1.35, 0.04);
-  bunyikanNada(chord[0] / 2, now, 1.8, 0.035);
-
-  melodyStep++;
-}
-
-async function toggleMusic() {
-  const label = document.getElementById("musicLabel");
-  const note = document.getElementById("musicNote");
-
-  if (!musicPlaying) {
-    try {
-      if (!audioContext) {
-        const AudioContextClass =
-          window.AudioContext || window.webkitAudioContext;
-
-        if (!AudioContextClass) {
-          label.textContent = "Musik tidak tersedia";
-          return;
+function onYouTubeIframeAPIReady() {
+  youtubePlayer = new YT.Player("youtubePlayer", {
+    videoId: "kSbQo03yOiI",
+    width: "100%",
+    height: "200",
+    playerVars: {
+      playsinline: 1,
+      controls: 1,
+      rel: 0
+    },
+    events: {
+      onReady: () => {
+        youtubeReady = true;
+        document.getElementById("musicStatus").textContent =
+          "Pemutar siap. Tekan Putar Musik untuk mendengarkan.";
+        if (playerRequested) playMusic();
+      },
+      onStateChange: event => {
+        if (event.data === YT.PlayerState.PLAYING) {
+          musicPlaying = true;
+          updateMusicButton(true);
+        } else if (
+          event.data === YT.PlayerState.PAUSED ||
+          event.data === YT.PlayerState.ENDED
+        ) {
+          musicPlaying = false;
+          updateMusicButton(false);
         }
-
-        audioContext = new AudioContextClass();
-        musicMaster = audioContext.createGain();
-        musicMaster.gain.value = 0.55;
-        musicMaster.connect(audioContext.destination);
+      },
+      onError: () => {
+        document.getElementById("musicStatus").textContent =
+          "Video tidak dapat diputar di sini. Coba buka lagu di YouTube.";
+        document.getElementById("musicStatus").innerHTML +=
+          ' <a href="https://www.youtube.com/watch?v=kSbQo03yOiI" target="_blank" rel="noopener">Buka di YouTube</a>';
       }
-
-      await audioContext.resume();
-
-      musicPlaying = true;
-      mainkanFrasa();
-      musicTimer = setInterval(mainkanFrasa, 1900);
-
-      label.textContent = "Jeda Musik";
-      note.textContent = "♫";
-    } catch (error) {
-      label.textContent = "Coba Putar Lagi";
     }
+  });
+}
+
+function updateMusicButton(playing) {
+  document.getElementById("musicLabel").textContent =
+    playing ? "Jeda Musik" : "Putar Musik";
+  document.getElementById("musicNote").textContent = playing ? "♫" : "♪";
+  document.getElementById("musicStatus").textContent =
+    playing ? "Musik sedang diputar 💗" : "Musik dijeda.";
+}
+
+function playMusic() {
+  if (!youtubeReady || !youtubePlayer) {
+    document.getElementById("musicStatus").textContent =
+      "Sedang menyiapkan pemutar musik...";
+    return;
+  }
+  youtubePlayer.playVideo();
+  document.getElementById("musicStatus").textContent =
+    "Memulai lagu... 💗";
+}
+
+function toggleMusic() {
+  if (!youtubeReady || !youtubePlayer) {
+    playerRequested = true;
+    document.getElementById("musicStatus").textContent =
+      "Sedang menyiapkan pemutar musik. Tunggu sebentar lalu tekan lagi.";
+    return;
+  }
+  if (musicPlaying) {
+    youtubePlayer.pauseVideo();
   } else {
-    musicPlaying = false;
-    clearInterval(musicTimer);
-
-    if (audioContext && audioContext.state === "running") {
-      await audioContext.suspend();
-    }
-
-    label.textContent = "Putar Musik";
-    note.textContent = "♪";
+    playMusic();
   }
 }
 
-/* SPASI UNTUK MELOMPAT */
-
+/* Tombol spasi untuk melompat */
 document.addEventListener("keydown", event => {
   if (event.code !== "Space") return;
-
   const bikeStage = document.getElementById("bikeStage");
-
-  if (
-    !bikeStage.classList.contains("hidden") &&
-    bikeRunning &&
-    !event.repeat
-  ) {
+  if (!bikeStage.classList.contains("hidden") && bikeRunning && !event.repeat) {
     event.preventDefault();
     lompat();
   }
 });
 
-/* BERSIHKAN TIMER SAAT HALAMAN DITUTUP */
+/* Muat API pemutar YouTube */
+(function loadYouTubeAPI() {
+  const tag = document.createElement("script");
+  tag.src = "https://www.youtube.com/iframe_api";
+  document.head.appendChild(tag);
+})();
 
+/* Bersihkan timer ketika halaman ditutup */
 window.addEventListener("pagehide", () => {
   clearInterval(flowerTimer);
   clearInterval(countdownTimer);
@@ -1114,7 +772,6 @@ window.addEventListener("pagehide", () => {
   clearInterval(obstacleSpawnTimer);
   clearTimeout(initialObstacleTimer);
   clearTimeout(jumpTimeout);
-  clearInterval(musicTimer);
   clearInterval(particleTimer);
 });
 </script>
