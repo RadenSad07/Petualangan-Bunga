@@ -44,6 +44,8 @@ h1 {
   margin: 12px;
 }
 
+/* PERMAINAN BUNGA */
+
 .flower {
   position: absolute;
   top: -50px;
@@ -156,7 +158,9 @@ h1 {
   }
 }
 
-#bikeObstacle {
+/* RINTANGAN */
+
+.bikeObstacle {
   position: absolute;
   left: 100%;
   bottom: 12px;
@@ -212,6 +216,8 @@ h1 {
   line-height: 1.5;
 }
 
+/* TOMBOL */
+
 button {
   border: none;
   border-radius: 12px;
@@ -229,6 +235,8 @@ button:disabled {
 #mulai {
   margin: 12px;
 }
+
+/* TAMPILAN PONSEL */
 
 @media (max-width: 480px) {
   #bikeStage {
@@ -275,7 +283,6 @@ button:disabled {
 
 <div id="game">
 
-  <!-- PETI HADIAH -->
   <button id="chest" onclick="bukaPeti()">🎁</button>
 
   <!-- TAHAP SEPEDA -->
@@ -293,12 +300,11 @@ button:disabled {
 
     <div id="bikeTrack">
       <div id="bikePlayer">🚲</div>
-      <div id="bikeObstacle">🪵</div>
       <div id="bikeFinish">🏁</div>
     </div>
 
     <p id="bikeStatus">
-      Tekan SPASI atau tombol LOMPAT untuk bermain.
+      Siap-siap! Rintangan akan datang lebih cepat.
     </p>
 
     <button id="jumpButton" onclick="lompat()">
@@ -346,11 +352,12 @@ const game = document.getElementById("game");
 let intervalSepeda;
 let nyawaSepeda = 3;
 let jarakSepeda = 0;
-let posisiRintangan = 0;
 let sedangMelompat = false;
-let jedaRintangan = 0;
 let sepedaAktif = false;
 let waktuLompat;
+
+let rintanganSepeda = [];
+let penghitungSpawn = 0;
 
 /* ==================================
    PERMAINAN MENANGKAP BUNGA
@@ -400,8 +407,11 @@ function mulaiGame() {
 
   sepedaAktif = false;
   sedangMelompat = false;
+  rintanganSepeda = [];
 
   document.querySelectorAll(".flower").forEach(b => b.remove());
+
+  document.querySelectorAll(".bikeObstacle").forEach(r => r.remove());
 
   skor = 0;
   waktu = 45;
@@ -443,7 +453,7 @@ function mulaiGame() {
 }
 
 /* ==================================
-   KETIKA 10 BUNGA BERHASIL DIKUMPULKAN
+   BERHASIL MENGUMPULKAN 10 BUNGA
 ================================== */
 
 function menang() {
@@ -460,21 +470,47 @@ function menang() {
 }
 
 /* ==================================
-   MEMBUKA PETI DAN MEMULAI TAHAP SEPEDA
+   MEMBUKA PETI HADIAH
 ================================== */
 
 function bukaPeti() {
   if (skor < 10 || aktif || sepedaAktif) return;
 
-  const peti = document.getElementById("chest");
-
-  peti.disabled = true;
-  peti.style.display = "none";
+  document.getElementById("chest").style.display = "none";
+  document.getElementById("chest").disabled = true;
 
   document.getElementById("pesan").style.display = "none";
   document.getElementById("bikeStage").style.display = "block";
 
   mulaiSepeda();
+}
+
+/* ==================================
+   MEMBUAT RINTANGAN BARU
+================================== */
+
+function buatRintangan() {
+  const lintasan = document.getElementById("bikeTrack");
+
+  const rintangan = document.createElement("div");
+
+  rintangan.className = "bikeObstacle";
+
+  /* Variasi rintangan */
+  const pilihan = ["🪵", "🪨", "🌵"];
+
+  rintangan.textContent =
+    pilihan[Math.floor(Math.random() * pilihan.length)];
+
+  /* Setiap rintangan baru muncul dari sisi kanan */
+  rintangan.style.left = lintasan.clientWidth + "px";
+
+  lintasan.appendChild(rintangan);
+
+  rintanganSepeda.push({
+    elemen: rintangan,
+    x: lintasan.clientWidth
+  });
 }
 
 /* ==================================
@@ -485,22 +521,21 @@ function mulaiSepeda() {
   clearInterval(intervalSepeda);
   clearTimeout(waktuLompat);
 
+  document.querySelectorAll(".bikeObstacle").forEach(r => r.remove());
+
+  rintanganSepeda = [];
+
   nyawaSepeda = 3;
   jarakSepeda = 0;
-  posisiRintangan = document.getElementById("bikeTrack").clientWidth + 50;
   sedangMelompat = false;
-  jedaRintangan = 0;
+  penghitungSpawn = 0;
   sepedaAktif = true;
 
   const pemain = document.getElementById("bikePlayer");
-  const rintangan = document.getElementById("bikeObstacle");
   const garisAkhir = document.getElementById("bikeFinish");
   const tombolLompat = document.getElementById("jumpButton");
 
   pemain.classList.remove("jumping");
-
-  rintangan.textContent = "🪵";
-  rintangan.style.left = posisiRintangan + "px";
 
   garisAkhir.style.display = "none";
 
@@ -511,75 +546,95 @@ function mulaiSepeda() {
   document.getElementById("jarak").textContent = "0";
 
   document.getElementById("bikeStatus").textContent =
-    "Ayo bersepeda! Hindari semua rintangan.";
+    "Ayo! Lompati rintangan yang datang berturut-turut!";
+
+  /*
+    Rintangan pertama muncul lebih dekat.
+    Tidak perlu menunggu lintasan kosong.
+  */
+  buatRintangan();
+
+  rintanganSepeda[0].x =
+    document.getElementById("bikeTrack").clientWidth * 0.58;
+
+  rintanganSepeda[0].elemen.style.left =
+    rintanganSepeda[0].x + "px";
 
   intervalSepeda = setInterval(() => {
     if (!sepedaAktif) return;
 
     const lintasan = document.getElementById("bikeTrack");
     const pemain = document.getElementById("bikePlayer");
-    const rintangan = document.getElementById("bikeObstacle");
 
-    /* Kemajuan perjalanan */
-    jarakSepeda += 0.2;
+    /* PERJALANAN LEBIH SINGKAT */
+    jarakSepeda += 0.3;
 
     document.getElementById("jarak").textContent =
       Math.min(100, Math.floor(jarakSepeda));
 
-    /* Gerakkan rintangan ke kiri */
-    posisiRintangan -= 5;
+    /*
+      RINTANGAN MUNCUL LEBIH SERING.
+      Satu rintangan baru setiap sekitar 1,05 detik.
+    */
+    penghitungSpawn++;
 
-    /* Jeda sebelum rintangan berikutnya */
-    if (jedaRintangan > 0) {
-      jedaRintangan--;
+    if (penghitungSpawn >= 35) {
+      buatRintangan();
+      penghitungSpawn = 0;
     }
 
-    /* Munculkan rintangan baru setelah rintangan lama lewat */
-    if (posisiRintangan < -50 && jedaRintangan === 0) {
-      posisiRintangan =
-        lintasan.clientWidth + 30 + Math.random() * 100;
+    /* GERAKKAN SEMUA RINTANGAN */
+    for (let i = rintanganSepeda.length - 1; i >= 0; i--) {
+      const data = rintanganSepeda[i];
+      const rintangan = data.elemen;
 
-      jedaRintangan = 15;
-    }
+      data.x -= 7.5;
+      rintangan.style.left = data.x + "px";
 
-    rintangan.style.left = posisiRintangan + "px";
+      /* PERIKSA TABRAKAN */
+      const sepedaRect = pemain.getBoundingClientRect();
+      const rintanganRect = rintangan.getBoundingClientRect();
 
-    /* Periksa tabrakan menggunakan posisi visual */
-    const sepedaRect = pemain.getBoundingClientRect();
-    const rintanganRect = rintangan.getBoundingClientRect();
+      const bertabrakan =
+        sepedaRect.right > rintanganRect.left + 5 &&
+        sepedaRect.left < rintanganRect.right - 5 &&
+        sepedaRect.bottom > rintanganRect.top + 5 &&
+        sepedaRect.top < rintanganRect.bottom - 5;
 
-    const bertabrakan =
-      sepedaRect.right > rintanganRect.left + 5 &&
-      sepedaRect.left < rintanganRect.right - 5 &&
-      sepedaRect.bottom > rintanganRect.top + 5 &&
-      sepedaRect.top < rintanganRect.bottom - 5;
+      if (bertabrakan && !sedangMelompat) {
+        nyawaSepeda--;
 
-    if (bertabrakan && !sedangMelompat) {
-      nyawaSepeda--;
+        document.getElementById("nyawa").textContent =
+          "❤️".repeat(nyawaSepeda) +
+          "🖤".repeat(3 - nyawaSepeda);
 
-      document.getElementById("nyawa").textContent =
-        "❤️".repeat(nyawaSepeda) +
-        "🖤".repeat(3 - nyawaSepeda);
+        /* Hapus rintangan yang sudah ditabrak */
+        rintangan.remove();
+        rintanganSepeda.splice(i, 1);
 
-      /* Singkirkan rintangan yang ditabrak */
-      posisiRintangan = -100;
-      jedaRintangan = 30;
+        if (nyawaSepeda <= 0) {
+          gagalSepeda();
+          return;
+        }
 
-      if (nyawaSepeda <= 0) {
-        gagalSepeda();
-        return;
+        document.getElementById("bikeStatus").textContent =
+          "Aduh! Nyawamu tersisa " + nyawaSepeda + ". Tetap semangat!";
+        continue;
       }
 
-      document.getElementById("bikeStatus").textContent =
-        "Aduh! Nyawamu tersisa " + nyawaSepeda + ". Ayo lanjut!";
+      /* HAPUS RINTANGAN YANG SUDAH LEWAT */
+      if (data.x < -60) {
+        rintangan.remove();
+        rintanganSepeda.splice(i, 1);
+      }
     }
 
-    /* Tampilkan garis akhir mendekati tujuan */
-    if (jarakSepeda >= 90) {
+    /* GARIS AKHIR */
+    if (jarakSepeda >= 85) {
       garisAkhir.style.display = "block";
     }
 
-    /* Berhasil mencapai tujuan */
+    /* BERHASIL MENCAPAI TUJUAN */
     if (jarakSepeda >= 100) {
       menangSepeda();
     }
@@ -587,7 +642,7 @@ function mulaiSepeda() {
 }
 
 /* ==================================
-   MEKANISME LOMPAT
+   LOMPAT DENGAN SPASI ATAU TOMBOL
 ================================== */
 
 function lompat() {
@@ -613,7 +668,7 @@ function lompat() {
 }
 
 /* ==================================
-   JIKA NYAWA HABIS
+   JIKA KEHILANGAN 3 NYAWA
 ================================== */
 
 function gagalSepeda() {
@@ -625,7 +680,7 @@ function gagalSepeda() {
   sedangMelompat = false;
 
   document.getElementById("bikeStatus").textContent =
-    "Perjalanan terhenti! Coba lagi untuk mencapai hadiah.";
+    "Nyawamu habis! Coba lagi dan kalahkan semua rintangan.";
 
   const tombolLompat = document.getElementById("jumpButton");
 
@@ -634,7 +689,7 @@ function gagalSepeda() {
 }
 
 /* ==================================
-   JIKA BERHASIL MENCAPAI GARIS AKHIR
+   BERHASIL MENCAPAI GARIS AKHIR
 ================================== */
 
 function menangSepeda() {
@@ -647,12 +702,11 @@ function menangSepeda() {
     "Kamu berhasil sampai! Hadiahmu sudah menunggu 💖";
 
   document.getElementById("bikeStage").style.display = "none";
-
   document.getElementById("pesan").style.display = "flex";
 }
 
 /* ==================================
-   KONTROL SPASI PADA KEYBOARD
+   KONTROL KEYBOARD
 ================================== */
 
 document.addEventListener("keydown", function(event) {
